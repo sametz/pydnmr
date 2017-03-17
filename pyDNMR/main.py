@@ -136,7 +136,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         self.graphicsView.plot(*twoSingletSpectrum().call_model())
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-        twoSingletSpectrum()
+        #twoSingletSpectrum()
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -164,13 +164,9 @@ class twoSingletSpectrum:
         self._pa = reichdefault[5] / 100
         #self.update_graph()
 
-
     def update_graph(self):
         #Ui_MainWindow.graphicsView.plot(*self.call_model())
         print(type(Ui_MainWindow.graphicsView))
-
-
-
 
     def call_model(self):
         x, y = dnmrplot_2spin(self._Va, self._Vb, self._ka, self._Wa,
