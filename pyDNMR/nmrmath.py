@@ -1,3 +1,5 @@
+# TODO: Pare down to only routines needed by pyDNMR; OR make a proper standalone
+
 """
 This version of nmrmath features speed-optimized hamiltonian, simsignals,
 and transition_matrix functions. Up to at least 8 spins, the new non-sparse
@@ -7,9 +9,7 @@ better than the original code.
 
 import numpy as np
 from math import sqrt
-
-from scipy.linalg import eigh
-from scipy.sparse import kron, csc_matrix, csr_matrix, lil_matrix, bmat
+from scipy.sparse import csc_matrix, csr_matrix, lil_matrix
 
 ##############################################################################
 # Second-order, Quantum Mechanics routines
@@ -750,54 +750,3 @@ def dnmr_AB(v, v1, v2, J, k, W):
 
     I = (n1 / d1) + (n2 / d2)
     return I
-
-
-if __name__ == '__main__':
-    from nspin import reich_list
-    from nmrplot import nmrplot as nmrplt
-
-    test_freqs, test_couplings = reich_list()[8]
-
-    # refactor reich_list to do this!
-    # test_couplings = test_couplings.todense()
-    # spectrum = nspinspec(test_freqs, test_couplings)
-    # nmrplt(nspinspec(test_freqs, test_couplings), y=24)
-    # ab2test = AB2(7.9, 26.5, 13.25, 0.5, 0, 300)
-    # abxtest = ABX(12.0, 2.0, 8.0, 15.0, 7.5, 0.5, 0, 300)
-    # nmrplt(abxtest)
-    # print(abxtest)
-
-    # v1 = (1200, 2)
-    # v2 = (450, 2)
-    # v3 = (300, 3)
-    # J12 = 7
-    # J23 = 7
-    # m1 = first_order(v1, [(J12, 2)])
-    # m2 = first_order(v2, [(J12, 2), (J23, 3)])
-    # m3 = first_order(v3, [(J23, 2)])
-    # testspec = reduce_peaks(sorted(m1 + m2 + m3))
-    # print(testspec)
-    # nmrplt(testspec)
-    # nmrplt(m1)
-    # # print(m2)
-    # nmrplt(m2)
-    # nmrplt(m3)
-
-    # m1 = multiplet(v1, [(J12, 2)])
-    # m2 = multiplet(v2, [(J12, 2), (J23, 3)])
-    # m3 = multiplet(v3, [(J23, 2)])
-    #
-    # testspec = sorted(m1 + m2 + m3)
-    # print(testspec)
-    # nmrplt(testspec)
-    # nmrplt(m1)
-    # nmrplt(m2)
-    # nmrplt(m3)
-    # abx3spec = ABX3(-12.0, 7.0, 7.0, 14.0, 150.0, 0.5, 0.0, 300.0)
-    # nmrplt(abx3spec)
-    # aaxxspec = AAXX(15, -10, 40, 6, 150, 0.5, 0, 300)
-    # print(sorted(aaxxspec))
-    # nmrplt(aaxxspec)
-    aabbspec = AABB(40, 15, -10, 40, 6, 150, 0.5, 0, 300)
-    print(sorted(aabbspec))
-    nmrplt(aabbspec)
