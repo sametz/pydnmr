@@ -1,0 +1,27 @@
+Qt Creator's Designer module was used to cobble together the first GUI for
+pyDNMR. The contents of this folder are the Qt Creator files and several
+versions of GUIs produced with it (ending in .ui).
+
+At the time of writing, most clear guides/tutorials still used PyQt4, which has
+major differences from PyQt5--in particular, the implementation of "signals
+and slots". The combination of QT Creator and pyuic5 was helpful in the early
+stages of the project to understand the new syntax as well as construct a
+functional GUI.
+
+The .ui files are converted to python/PyQt5 vie the command line:
+
+    pyuic5 -x guiname.ui -o guiname.py
+
+and substituting the guiname with the names of the target/destination files.
+
+
+mainwindow was the first attempt at the GUI, but the lack of clear widget
+names resulted in an eyesore.
+
+mainwindow_named gave names to the widgets within Qt Composer, that were
+copied over into the final python version. This was expanded upon to result
+in the first functional GUI.
+
+mainwindow_signal_socket_tets added an undesired signal/slot link to see
+where pyuic5/Qt thought .connect statements "belong" in the code. It was only
+ used as a learning aid.

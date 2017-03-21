@@ -1,0 +1,1 @@
+A temporary holding area for items scheduled for deletion from the project.
