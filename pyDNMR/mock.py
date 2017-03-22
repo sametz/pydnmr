@@ -7,70 +7,46 @@ a main window, that will have GUI elements added to it gradually.
 import sys
 from collections import namedtuple
 
-# Import widgets separately for simpler names
-from PyQt5 import QtCore  # , QtWidgets
-from PyQt5.QtWidgets import (QWidget, QGridLayout, QHBoxLayout, QVBoxLayout,
-                            QLabel, QDoubleSpinBox, QMenuBar, QToolBar,
-                            QStatusBar, QApplication, QMainWindow)
+from PyQt5.QtWidgets import (QWidget, QGridLayout, QLabel, QDoubleSpinBox,
+                             QApplication, QMainWindow)
 from pyqtgraph import PlotWidget
 from nmrplot import dnmrplot_2spin
+
+# Define the different types of input widgets that may be required.
+# Currently all inputs are QDoubleSpinBox.
+# Keys are for use with a dict that is sent to model as **kwargs.
+# Strings are for labels.
+# Value is for the inital QDoubleSpinBox default.
+# Range is the range of values for the QDoubleSpinBox.
+# RANGE MUST BE SET BEFORE VALUE
 
 var = namedtuple('var', ['key', 'string', 'value', 'range'])
 Va = var(key='Va', string='Va', value=165.00, range=(0.00, 10000.00))
 Vb = var(key='Vb', string='Vb', value=135.00, range=(0.00, 10000.00))
-k = var(key='k', string='kab + kba', value=1.50, range=(0.00, 1000.00))
+k = var(key='k', string='kab + kba', value=1.50, range=(0.01, 1000.00))
 Wa = var(key='Wa', string='Wa', value=0.50, range=(0.00, 100.00))
 Wb = var(key='Wb', string='Wb', value=0.50, range=(0.00, 100.00))
 percent_a = var(key='percent_a', string='%a', value=50.00, range=(0.00, 100.00))
+
+# Each type of calculation has its own ordering of input widgets:
 twospin_vars = (Va, Vb, k, Wa, Wb, percent_a)
 
-
-class modelFrame(QHBoxLayout):
-    """
-    A horizontal layout designed to hold a series of child widgets that provide
-    inputs for a model, detects when any of the children are updated, pings the
-    model for the simulation data, and tells  the graphics window to plot
-    the data.
-    """
-
-    def __init__(self, parent=None):
-        super(modelFrame, self).__init__(parent)
-
-    def onChildUpdate(self):
-        pass
-
-
-def boxer(label, value):
-    return label, value
-
-def va_box():
-    va_layout = QVBoxLayout()
-    va_layout.setContentsMargins(11, 11, 11, 11)
-    va_layout.setSpacing(6)
-    va_layout.setObjectName("va_layout")
-    va_label = QLabel("Va")
-    va_label.setObjectName("va_label")
-    va_layout.addWidget(va_label)
-    va_box = QDoubleSpinBox()
-    va_box.setObjectName("va_box")
-    va_layout.addWidget(va_box)
-
-    return va_layout
-
+# further widget collections woudl appear hear for future calculation models
 
 
 class dnmrGui(QMainWindow):
+    """
+    Currently the app features a single model (two uncoupled spins) to
+    simulate, and so a single main window. TODO: as models are added, create a
+    toggle
+    between GUI setups.
+    """
 
     def __init__(self, parent=None):
+
         super(dnmrGui, self).__init__(parent)
 
-        self.widget_list = ['Va', 'Vb', 'k', 'Wa', 'Wb']
-        self.data = {'Va': (165.00, (0.00, 10000.00)),
-                'Vb': (135.00, (0.00, 10000.00)),
-                'k': (1.50, (0.00, 1000.00)),
-                'Wa': (0.50, (0.00, 100.00)),
-                'Wb': (0.50, (0.00, 100.00))}
-
+        self.simulation_vars = {}  # stores kwargs that model is called with
 
         self.setupUi()
 
@@ -80,53 +56,67 @@ class dnmrGui(QMainWindow):
         self.setCentralWidget(centralWidget)
 
         centralLayout = QGridLayout()
-
-        # for i, widget in enumerate(self.widget_list):
-        #     wlabel = QLabel(widget)
-        #     wbox = QDoubleSpinBox()
-        #
-        #     lo, hi = self.data[widget][1]
-        #     wbox.setRange(lo, hi)
-        #     wbox.setValue(self.data[widget][0])
-        #
-        #     centralLayout.addWidget(wlabel, 0, i)
-        #     centralLayout.addWidget(wbox, 1, i)
+        # More complex layouts can be considered in future, e.g. a horizontal
+        #  layout containing a serious of vertical layouts containing labels
+        # and spinboxes.
 
         for i, widget in enumerate(twospin_vars):
+            # The namedtuple construct facilitates widget generation:
             wlabel = QLabel(widget.string)
             wbox = QDoubleSpinBox()
-            wbox.setRange(*widget.range)
+            wbox.setRange(*widget.range)  # SET RANGE BEFORE VALUE
             wbox.setValue(widget.value)
+
+            # populate the dictionary with initial simulation variables
+            self.simulation_vars[widget.key] = widget.value
+
+            # Choosing a grid layout simplifies construction of a horizontal
+            # array of widgets:
             centralLayout.addWidget(wlabel, 0, i)
             centralLayout.addWidget(wbox, 1, i)
-            wbox.valueChanged['double'].connect(lambda val,
-                                                key=widget.key:
-                                                self.update_graph(key, val))
 
-        # modelBar = modelFrame()
-        # modelBar.addLayout(va_box())
-        thing1 = QLabel('Thing 1')
-        thing2 = QLabel('Thing 2')
-        # modelBar.addWidget(thing1)
-        # modelBar.addWidget(thing2)
+            # Using the lambda expression below allows extra information to
+            # be passed to the self.update slot, allowing the delegator to
+            # see who sent the signal, update the dictionary of model inputs,
+            # call the model for a simulation result, and plot it.
+            wbox.valueChanged.connect(
+                lambda val, key=widget.key: self.update(key, val))
 
+        # create the pyqtGraph widget for graphical output of the model's
+        # spectrum
         graphicsView = PlotWidget()
-
-        #centralLayout.addLayout(modelBar, 0, 0, 1, 1)
-        # centralLayout.addWidget(thing1, 0, 0, 1, 1)
-        # centralLayout.addWidget(thing2, 0, 1, 1, 1)
         centralLayout.addWidget(graphicsView, 2, 0, 1, len(twospin_vars))
+        # lets the graph span the entire width of the window, no matter how
+        # many input widgets appear above
+
         centralWidget.setLayout(centralLayout)
 
-        self.setGeometry(50, 50, 500, 300)
+        self.plotdata = graphicsView.plot()
+        self.plotdata.setData(*self.call_model())
+
+        self.setGeometry(50, 50, 800, 600)
         self.setWindowTitle('Mock')
         self.statusBar().showMessage('Ready')
 
-    def update_graph(self, key, val):
+    def call_model(self):
+        """
+        Sends the dictionary as **kwargs to the mode
+        :return: a spectrum of x and y coordinate arrays
+        """
+        x, y = dnmrplot_2spin(**self.simulation_vars)
+        return x, y
 
-        source = self.sender()
-        if key:
-            print(key, val, source.text())
+    def update(self, key, val):
+        """
+        Slot detects change to numerical inputs; records the change in
+        simulations_vars; calls the model to get an updated spectrum; and
+        plots the spectrum.
+        :param key: the key associated with the variable, forwarded by the
+        signaling widget
+        :param val: the current value of the signalling widget
+        """
+        self.simulation_vars[key] = val
+        self.plotdata.setData(*self.call_model())
 
 if __name__ == '__main__':
 
