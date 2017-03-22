@@ -198,7 +198,7 @@ class MainWindow(QMainWindow):
 
     def retranslateUi(self):
         #_translate = QtCore.QCoreApplication.translate
-        self.setWindowTitle("pyDNMR")
+        self.setWindowTitle("pydnmr")
         self.va_label.setText("Va")
         self.va_box.setRange(0.00, 10000.00)
         self.va_box.setValue(165.00)
@@ -254,7 +254,7 @@ class MainWindow(QMainWindow):
 
 def main():
     app = QApplication(sys.argv)
-    app.setApplicationName('pyDNMR')
+    app.setApplicationName('pydnmr')
     ui = mock()
     ui.show()
     sys.exit(app.exec_())
