@@ -21,15 +21,15 @@ from dnmrmath import twosinglets
 
 # Widget presets:
 var = namedtuple('var', ['key', 'string', 'value', 'range'])
-Va = var(key='Va', string='Va', value=165.00, range=(0.00, 10000.00))
-Vb = var(key='Vb', string='Vb', value=135.00, range=(0.00, 10000.00))
+va = var(key='va', string='Va', value=165.00, range=(0.00, 10000.00))
+vb = var(key='vb', string='Vb', value=135.00, range=(0.00, 10000.00))
 k = var(key='k', string='k', value=1.50, range=(0.01, 1000.00))
-Wa = var(key='Wa', string='Wa', value=0.50, range=(0.00, 100.00))
-Wb = var(key='Wb', string='Wb', value=0.50, range=(0.00, 100.00))
+wa = var(key='wa', string='Wa', value=0.50, range=(0.00, 100.00))
+wb = var(key='wb', string='Wb', value=0.50, range=(0.00, 100.00))
 percent_a = var(key='percent_a', string='%a', value=50.00, range=(0.00, 100.00))
 
 # Each type of calculation will have its own ordering of input widgets:
-twospin_vars = (Va, Vb, k, Wa, Wb, percent_a)
+twospin_vars = (va, vb, k, wa, wb, percent_a)
 
 # further widget collections woudl appear hear for future calculation models
 
@@ -97,6 +97,7 @@ class dnmrGui(QMainWindow):
         centralWidget.setLayout(centralLayout)
 
         self.plotdata = graphicsView.plot()
+        self.plotdata.getViewBox().invertX(True)  # Reverse x axis "NMR style"
         self.plotdata.setData(*self.call_model())
 
         self.setGeometry(50, 50, 800, 600)
@@ -121,9 +122,14 @@ class dnmrGui(QMainWindow):
         :param val: the current value of the signalling widget
         """
         self.simulation_vars[key] = val
-        #self.plotdata.setData(*self.call_model())
-        spectrum = twosinglets(**self.simulation_vars).spectrum()
-        self.plotdata.setData(spectrum)
+
+        # Choose one of the following. TODO: speedtests to find fastest routine
+        self.plotdata.setData(*self.call_model())  # original routine
+
+        # OR:
+
+        # spectrum = twosinglets(**self.simulation_vars).spectrum()
+        # self.plotdata.setData(*spectrum)  # using new twosinglets class
 
 if __name__ == '__main__':
 

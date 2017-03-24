@@ -10,7 +10,7 @@ class twosinglets:
     pi = np.pi
     pi_squared = pi ** 2
 
-    def __init__(self, va=1, vb=0, ka=0.01, wa=0.5, wb=0.5, pa=0.50):
+    def __init__(self, va=1, vb=0, k=0.01, wa=0.5, wb=0.5, percent_a=50):
         """
         Initialize the system with the parameters:
         :param va: Frequency of nucleus a
@@ -23,12 +23,13 @@ class twosinglets:
         # Idea is to complete the frequency-independent calculations when the
         #  class is instantiated, and thus calculations may be faster.
         self.l_limit = vb - 50
-        self.r_limit = vb + 50
+        self.r_limit = va + 50
 
         T2a = 1 / (self.pi * wa)
         T2b = 1 / (self.pi * wb)
+        pa = percent_a / 100
         pb = 1 - pa
-        self.tau = pb / ka
+        self.tau = pb / k
         dv = va - vb
         self.Dv = (va + vb) / 2
         self.P = self.tau * (1 / (T2a * T2b) + self.pi_squared * (dv ** 2)) + (
@@ -47,7 +48,7 @@ class twosinglets:
         :return: a frequency-dependent function that returns the intensity of
         the spectrum at frequency v
         """
-        #nonlocal Dv, P, Q, R  # is this necessary?
+
         p = self.p
         Dv = self.Dv
         P = self.P

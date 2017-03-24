@@ -85,25 +85,25 @@ def tkplot(spectrum, y=4):
     return x, y
 
 
-def dnmrplot_2spin(Va, Vb, k, Wa, Wb, percent_a):
+def dnmrplot_2spin(va, vb, k, wa, wb, percent_a):
     """
     Creates the spectrum data using the function nmrmath.two_spin.
-    Currently assumes Va > Vb.
+    Currently assumes va > vb.
     Returns: tuple of arrays for x and y coordinates
     """
 
-    l_limit = Vb - 50
-    r_limit = Va + 50
+    l_limit = vb - 50
+    r_limit = va + 50
     x = np.linspace(l_limit, r_limit, 800)
-    # y = two_spin(x, Va, Vb, k, Wa, Wb, percent_a)
+    # y = two_spin(x, va, vb, k, wa, wb, percent_a)
 
     # OR:
 
-    dfunc = d2s_func(Va, Vb, k, Wa, Wb, percent_a/100)
+    dfunc = d2s_func(va, vb, k, wa, wb, percent_a / 100)
     y = dfunc(x)
 
     # OR:
-    # y = reich(x, Va, Vb, k, Wa, Wb, percent_a)
+    # y = reich(x, va, vb, k, wa, wb, percent_a)
 
     return x, y
 
