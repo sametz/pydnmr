@@ -28,13 +28,13 @@ TODO:
 ----
 
 Steps to a Version 1 release:
-- Determine what other package components to add (documentation, Sphinx,
-makefiles, a manual, etc.
-- Add functional and unit tests
-- Check PEP8/PEP257 compliance for code style
--Minor tweaks to GUI appearance/functionality, such as graph
+* Determine what other package components to add (documentation, Sphinx,
+makefiles, a manual, etc.)
+* Add functional and unit tests
+* Check PEP8/PEP257 compliance for code style
+* Minor tweaks to GUI appearance/functionality, such as graph
 color/behavior and accelerated scrolling in number widgets
--elaborating setup.py and freezing the app as a 1-file executable, for
+*elaborating setup.py and freezing the app as a 1-file executable, for
 OSX/Win/Unix.
 
 ----
