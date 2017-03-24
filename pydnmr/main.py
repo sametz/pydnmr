@@ -8,6 +8,7 @@ from collections import namedtuple
 from PyQt5.QtWidgets import (QWidget, QGridLayout, QLabel, QDoubleSpinBox,
                              QApplication, QMainWindow)
 from pyqtgraph import PlotWidget
+# noinspection PyUnresolvedReferences
 from dnmrplot import dnmrplot_2spin
 
 # If testing twosinglets class, uncomment the next line:
@@ -88,6 +89,7 @@ class dnmrGui(QMainWindow):
             # call the model for a simulation result, and plot it. See:
             # https://mfitzp.io/article/transmit-extra-data-with-signals-in-pyqt/
 
+            # noinspection PyUnresolvedReferences
             wbox.valueChanged.connect(
                 lambda val, key=widget.key: self.update(key, val))
 

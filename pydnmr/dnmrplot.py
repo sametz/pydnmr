@@ -6,6 +6,7 @@ data in a format suitable for plotting.
 import numpy as np
 
 # Uncomment ', twosinglets' if testing that optional function
+# noinspection PyUnresolvedReferences
 from dnmrmath import dnmr_AB, d2s_func  # , twosinglets
 
 
