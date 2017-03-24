@@ -3,3 +3,5 @@
 /pydnmr/Qt/
 /.idea/
 /tests/.cache/
+*/__pycache__
+g/.idea/inspectionProfiles/Project_Default.xml
