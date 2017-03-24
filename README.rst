@@ -28,6 +28,7 @@ TODO:
 ----
 
 Steps to a Version 1 release:
+
 * Determine what other package components to add (documentation, Sphinx,
 makefiles, a manual, etc.)
 * Add functional and unit tests
