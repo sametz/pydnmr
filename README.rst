@@ -39,7 +39,7 @@ makefiles, a manual, etc.)
 * Minor tweaks to GUI appearance/functionality, such as graph
 color/behavior and accelerated scrolling in number widgets
 
-*elaborating setup.py and freezing the app as a 1-file executable, for
+* Elaborating setup.py and freezing the app as a 1-file executable, for
 OSX/Win/Unix.
 
 ----
