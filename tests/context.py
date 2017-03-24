@@ -21,4 +21,6 @@ import pydnmr
 
 
 if __name__ == '__main__':
-    pydnmr.main()
+    # for key in pydnmr.__dict__:
+    #     print(key, pydnmr.__dict__[key])
+    pydnmr.dnmrplot()

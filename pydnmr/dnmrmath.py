@@ -1,3 +1,16 @@
+"""Utilities for the calculation of dynamic NMR (DNMR) spectra.
+
+Formulas for simulating two uncoupled spin-1/2 nuclei are derived from:
+Sandstrom, J. "Dynamic NMR Spectroscopy". Academic Press, 1982, p. 15.
+
+Formulas for simulating two coupled spin-1/2 nuclei are derived from:
+Brown, K.C.; Tyson, R. L.; Weil, J. A. _J. Chem. Educ._ 1998, 75, 1632.
+(NOTE: Hans Reich pointed out that the paper has a sign typo in Equation (2b)!
+the last term is minus-over-plus, not plus-over-minus.)
+
+"""
+
+
 import numpy as np
 
 
@@ -12,13 +25,13 @@ class twosinglets:
 
     def __init__(self, va=1, vb=0, k=0.01, wa=0.5, wb=0.5, percent_a=50):
         """
-        Initialize the system with the parameters:
+        Initialize the system with the required parameters:
         :param va: Frequency of nucleus a
         :param vb: Frequency of nucleus b (must be < va)
-        :param ka: Rate of nuclear exchange
+        :param k: Rate of nuclear exchange
         :param wa: With at half height for va signal at the slow exchange limit
         :param wb: With at half height for vb signal at the slow exchange limit
-        :param pa: Fractional population of state 'a'
+        :param percent_a: Fractional population of state 'a'
         """
         # Idea is to complete the frequency-independent calculations when the
         #  class is instantiated, and thus calculations may be faster.
@@ -32,13 +45,12 @@ class twosinglets:
         self.tau = pb / k
         dv = va - vb
         self.Dv = (va + vb) / 2
-        self.P = self.tau * (1 / (T2a * T2b) + self.pi_squared * (dv ** 2)) + (
-            pa / T2a + pb / T2b)
+        self.P = self.tau * (1 / (T2a * T2b) + self.pi_squared * (dv ** 2)) \
+            + (pa / T2a + pb / T2b)
         self.p = 1 + self.tau * ((pb / T2a) + (pa / T2b))
         self.Q = self.tau * (- self.pi * dv * (pa - pb))
-        self.R = self.pi * dv * self.tau * ((1 / T2b) - (1 / T2a)) + self.pi *\
-                                                                    dv * (
-            pa - pb)
+        self.R = self.pi * dv * self.tau * ((1 / T2b) - (1 / T2a)) \
+            + self.pi * dv * (pa - pb)
         self.r = 2 * self.pi * (1 + self.tau * ((1 / T2a) + (1 / T2b)))
 
     def intensity(self, v):
@@ -69,12 +81,6 @@ class twosinglets:
         return x, y
 
 
-
-
-
-
-
-
 def two_spin(v, va, vb, ka, wa, wb, pa):
     """
     Calculate intensity I (y-coordinate) at a frequency v (x-coordinate) in
@@ -100,8 +106,8 @@ def two_spin(v, va, vb, ka, wa, wb, pa):
     T2a = 1 / (pi * wa)
     T2b = 1 / (pi * wb)
 
-    P = tau * ((1 / (T2a * T2b)) - 4 * (pi ** 2) * (Dv ** 2) +
-               (pi ** 2) * (dv ** 2))
+    P = tau * ((1 / (T2a * T2b)) - 4 * (pi ** 2) * (Dv ** 2)
+               + (pi ** 2) * (dv ** 2))
     P += ((pa / T2a) + (pb / T2b))
 
     Q = tau * (2 * pi * Dv - pi * dv * (pa - pb))
@@ -177,10 +183,7 @@ def dnmr_AB(v, v1, v2, J, k, w):
     the DNMR spectrum for the 2-site exchange of two coupled spin-1/2 nuclei
     (i.e. an AB quartet at the slow-exchange limit).
 
-    Not currently implemented in pyDNMR. A translation of the equation from
-    p. 14 of
-    Weil's JCE paper, p. 14, for the uncoupled 2-site exchange simulation.
-    (NOTE: Hans Reich pointed out that the paper has a sign typo!)
+    Not currently implemented in pyDNMR.
 
     :param v: The frequency needing an intensity to be calculated at.
     :param v1: The frequency of nucleus '1' at the slow exchange limit and
@@ -192,7 +195,6 @@ def dnmr_AB(v, v1, v2, J, k, w):
     :param w: The peak width at half height at the slow-exchange limit.
     :return:
     """
-    # TODO: include full proper citation for Weil paper.
     # TODO: implement in pyDNMR
 
     pi = np.pi

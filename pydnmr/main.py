@@ -9,7 +9,9 @@ from PyQt5.QtWidgets import (QWidget, QGridLayout, QLabel, QDoubleSpinBox,
                              QApplication, QMainWindow)
 from pyqtgraph import PlotWidget
 from dnmrplot import dnmrplot_2spin
-from dnmrmath import twosinglets
+
+# If testing twosinglets class, uncomment the next line:
+# from dnmrmath import twosinglets
 
 # Define the different types of input widgets that may be required.
 # Currently all inputs are QDoubleSpinBox.
