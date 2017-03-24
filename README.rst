@@ -28,13 +28,18 @@ TODO:
 ----
 
 Steps to a Version 1 release:
-- Determine what other package components to add (documentation, Sphinx,
-makefiles, a manual, etc.
-- Add functional and unit tests
-- Check PEP8/PEP257 compliance for code style
--Minor tweaks to GUI appearance/functionality, such as graph
+
+* Determine what other package components to add (documentation, Sphinx,
+makefiles, a manual, etc.)
+
+* Add functional and unit tests
+
+* Check PEP8/PEP257 compliance for code style
+
+* Minor tweaks to GUI appearance/functionality, such as graph
 color/behavior and accelerated scrolling in number widgets
--elaborating setup.py and freezing the app as a 1-file executable, for
+
+* Elaborating setup.py and freezing the app as a 1-file executable, for
 OSX/Win/Unix.
 
 ----
@@ -47,5 +52,4 @@ Disclaimer: the author is neither an NMR spectroscopist, nor a software engineer
 
 Acknowledgements
 ================
-This project is inspired by Hans Reich's WINDNMR application. I thank him for
- our conversations, and his sharing of WINDNMR's Visual Basic 6 code.
+This project is inspired by Hans Reich's WINDNMR application. I thank him for our conversations, and his sharing of WINDNMR's Visual Basic 6 code.
