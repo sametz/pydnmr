@@ -2,7 +2,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-from nmrmath import dnmr_AB, d2s_func
+from dnmrmath import dnmr_AB, d2s_func, twosinglets
 
 
 def lorentz(v, v0, T2):
@@ -87,7 +87,7 @@ def tkplot(spectrum, y=4):
 
 def dnmrplot_2spin(Va, Vb, k, Wa, Wb, percent_a):
     """
-    Creates the spectrum data using the function nmrmath.dnmr_2spin.
+    Creates the spectrum data using the function nmrmath.two_spin.
     Currently assumes Va > Vb.
     Returns: tuple of arrays for x and y coordinates
     """
@@ -95,7 +95,7 @@ def dnmrplot_2spin(Va, Vb, k, Wa, Wb, percent_a):
     l_limit = Vb - 50
     r_limit = Va + 50
     x = np.linspace(l_limit, r_limit, 800)
-    # y = dnmr_2spin(x, Va, Vb, k, Wa, Wb, percent_a)
+    # y = two_spin(x, Va, Vb, k, Wa, Wb, percent_a)
 
     # OR:
 

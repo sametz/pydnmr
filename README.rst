@@ -22,6 +22,30 @@ The brave and curious can copy the contents of the pydnmr/pydnmr folder, and run
 
 ----
 
+TODO:
+=====
+
+----
+
+Steps to a Version 1 release:
+- Determine what other package components to add (documentation, Sphinx,
+makefiles, a manual, etc.
+- Add functional and unit tests
+- Check PEP8/PEP257 compliance for code style
+-Minor tweaks to GUI appearance/functionality, such as graph
+color/behavior and accelerated scrolling in number widgets
+-elaborating setup.py and freezing the app as a 1-file executable, for
+OSX/Win/Unix.
+
+----
+
 Feedback
 ========
 Disclaimer: the author is neither an NMR spectroscopist, nor a software engineer. I'm figuring this out as I go along. I welcome feedback on the project. If you think the simulation or the code could be improved upon, feel free to leave an issue on GitHub, or contact me by email (see setup.py for my current address).
+
+----
+
+Acknowledgements
+================
+This project is inspired by Hans Reich's WINDNMR application. I thank him for
+ our conversations, and his sharing of WINDNMR's Visual Basic 6 code.

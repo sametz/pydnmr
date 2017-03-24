@@ -9,13 +9,13 @@
 # noinspection PyUnresolvedReferences
 
 import pytest
-import pydnmr
+from .context import pydnmr
 
 def test_dnmrplot_2spin_type():
 
     WINDNMR_DEFAULT = (165.00, 135.00, 1.50, 0.50, 0.50, 0.5000)
-    x, y = pydnmr.nmrplot.dnmrplot_2spin(*WINDNMR_DEFAULT)
-    assert type(x) == 'list'
+    x, y = nmrplot.dnmrplot_2spin(*WINDNMR_DEFAULT)
+    assert type(x) == 'list'  # should fail b/c it's a numpy array
 
 
 # if __name__ == '__main__':
