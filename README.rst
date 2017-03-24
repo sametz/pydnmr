@@ -37,8 +37,7 @@ Steps to a Version 1 release:
 
 * Minor tweaks to GUI appearance/functionality, such as graph color/behavior and accelerated scrolling in number widgets
 
-* Elaborating setup.py and freezing the app as a 1-file executable, for
-OSX/Win/Unix.
+* Elaborating setup.py and freezing the app as a 1-file executable, for OSX/Win/Unix.
 
 ----
 
