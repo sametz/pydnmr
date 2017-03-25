@@ -9,7 +9,7 @@ from PyQt5.QtWidgets import (QWidget, QGridLayout, QLabel, QDoubleSpinBox,
                              QApplication, QMainWindow)
 from pyqtgraph import PlotWidget
 # noinspection PyUnresolvedReferences
-from dnmrplot import dnmrplot_2spin
+from pydnmr.dnmrplot import dnmrplot_2spin
 
 # If testing twosinglets class, uncomment the next line:
 # from dnmrmath import twosinglets

@@ -6,16 +6,23 @@
 # PyCharm keeps refering to this file as 'SimplePlot', the name of the
 # file it was copied from?!
 
-# noinspection PyUnresolvedReferences
 
-import pytest
-from .context import pydnmr
+
+#import pytest
+#from .context import pydnmr
+from pydnmr import dnmrplot
 
 def test_dnmrplot_2spin_type():
 
     WINDNMR_DEFAULT = (165.00, 135.00, 1.50, 0.50, 0.50, 0.5000)
-    x, y = pydnmr.dnmrplot.dnmrplot_2spin(*WINDNMR_DEFAULT)
-    assert type(x) == 'list'  # should fail b/c it's a numpy array
+    x, y = dnmrplot.dnmrplot_2spin(*WINDNMR_DEFAULT)
+    print('x ', type(x), "y", type(y))
+    # assert type(x) == "<class 'numpy.ndarray'>"
+    # assert type(y) == "<class 'numpy.ndarray'>"
+    assert type(x) == type(y)
+    # WINDNMR_DEFAULT = (165.00, 135.00, 1.50, 0.50, 0.50, 0.5000)
+    # x, y = pydnmr.dnmrplot.dnmrplot_2spin(*WINDNMR_DEFAULT)
+    # assert type(x) == 'list'  # should fail b/c it's a numpy array
 
 
 # if __name__ == '__main__':
@@ -25,7 +32,7 @@ def test_dnmrplot_2spin_type():
 #     x, y = pydnmr.nmrplot.dnmrplot_2spin(*WINDNMR_DEFAULT)
 #     plt = pg.plot(x, y)
 #     plt.show()
-if __name__ == '__main__':
-    # for key in pydnmr.__dict__:
-    #     print(key, pydnmr.__dict__[key])
-    pydnmr.dnmrplot()
+# if __name__ == '__main__':
+#     # for key in pydnmr.__dict__:
+#     #     print(key, pydnmr.__dict__[key])
+#     pydnmr.dnmrplot()

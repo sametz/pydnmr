@@ -7,7 +7,7 @@ import numpy as np
 
 # Uncomment ', twosinglets' if testing that optional function
 # noinspection PyUnresolvedReferences
-from dnmrmath import dnmr_AB, d2s_func  # , twosinglets
+from .dnmrmath import dnmr_AB, d2s_func  # , twosinglets
 
 
 def dnmrplot_2spin(va, vb, k, wa, wb, percent_a):
