@@ -167,6 +167,9 @@ def d2s_func(va, vb, ka, wa, wb, pa):
         :param v: frequency
         :return: function that calculates intensity
         """
+        ### Potential major bug with this function and namespace:
+        # I think the nonlocal causes function to be corrupted on repeated
+        # calls, e.g. becuome arrays instead of values?!?!?!
         nonlocal Dv, P, Q, R
         Dv -= v
         P -= tau * 4 * pi_squared * (Dv ** 2)
