@@ -1,3 +1,5 @@
+# TODO: Write more tests!
+
 import numpy as np
 from . import testdata
 from .dnmrplot import dnmrplot_2spin
@@ -28,6 +30,8 @@ def test_dnmrplot_2spin_fastexchange():
     accepted_x, accepted_y = testdata.TWOSPIN_FAST
     np.testing.assert_array_almost_equal(x, accepted_x)
     np.testing.assert_array_almost_equal(y, accepted_y)
+
+
 # if __name__ == "__main__":
 #     import plottools as pt
 #

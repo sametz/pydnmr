@@ -1,4 +1,4 @@
-# TODO: Write tests!
+# TODO: Write mre tests!
 import numpy as np
 # from pytest import approx
 from .dnmrmath import *
@@ -10,7 +10,7 @@ from .testdata import TWOSPIN_SLOW, TWOSPIN_COALESCE, TWOSPIN_FAST
 
 def get_intensity(spectrum, x):
     """
-    A quick and dirt method to get intensity of data point closest to 
+    A quick and dirty method to get intensity of data point closest to 
     frequency x. Better: interpolate between two data points if match isn't 
     exact (TODO?)
     :param spectrum: tuple of (x, y) arrays for frequency, intensity data
@@ -88,5 +88,26 @@ def test_d2s_func_slow_exchange():
                                        peak[1])
 
 
-def test_derp():
-    assert 1 + 1 == 3
+def test_TwoSinglets_slow_exchange():
+    spectrum = TWOSPIN_SLOW
+    peaks = get_maxima(spectrum)
+    print("Maxima: ", peaks)
+
+    Simulation = TwoSinglets(165, 135, 1.5, 0.5, 0.5, 50)
+    popplot(*Simulation.spectrum())
+
+    print('Testing intensity calculator on 135: ', Simulation.intensity(135))
+    print('Testing intensity calculator on 165: ', Simulation.intensity(165))
+
+    for peak in peaks:
+        print('Testing vs. accepted peak at: ', peak)
+        calculated_intensity = Simulation.intensity(peak[0])
+
+        print('i.e. input of frequency ', peak[0], ' should give output of '
+              'intensity ', peak[1])
+        print('Calculated intensity is actually: ', calculated_intensity)
+
+        np.testing.assert_almost_equal(calculated_intensity,
+                                       peak[1])
+
+

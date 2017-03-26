@@ -11,8 +11,8 @@ from pyqtgraph import PlotWidget
 # noinspection PyUnresolvedReferences
 from pydnmr.dnmrplot import dnmrplot_2spin
 
-# If testing twosinglets class, uncomment the next line:
-# from dnmrmath import twosinglets
+# If testing TwoSinglets class, uncomment the next line:
+# from dnmrmath import TwoSinglets
 
 # Define the different types of input widgets that may be required.
 # Currently all inputs are QDoubleSpinBox.
@@ -132,8 +132,8 @@ class dnmrGui(QMainWindow):
 
         # OR:
 
-        # spectrum = twosinglets(**self.simulation_vars).spectrum()
-        # self.plotdata.setData(*spectrum)  # using new twosinglets class
+        # spectrum = TwoSinglets(**self.simulation_vars).spectrum()
+        # self.plotdata.setData(*spectrum)  # using new TwoSinglets class
 
 if __name__ == '__main__':
 
