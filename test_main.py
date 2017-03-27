@@ -21,7 +21,7 @@ class TestMainGUi:
         app_title = self.ui.windowTitle()
         assert app_title == 'pyDNMR'
 
-    def test_two_siglet_all_widgets_exist(self):
+    def test_two_signlet_all_widgets_exist(self):
         """The user sees 5 labels and 5 'double spin box' numerical entries 
         corresponding to the 5 inputs needed for the simulation.
         """
