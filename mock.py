@@ -31,9 +31,11 @@ twospin_vars = (va, vb, k, wa, wb, percent_a)
 
 class dnmrGui(QMainWindow):
     def __init__(self, parent=None):
+
         super(dnmrGui, self).__init__(parent)
 
         self.simulation_vars = {}  # stores kwargs that model is called with
+
         self.setObjectName('toplevel')
         self.setupUi()
 
@@ -57,6 +59,7 @@ class dnmrGui(QMainWindow):
             # The namedtuple construct facilitates widget generation:
             wlabel = QLabel(widget.string)
             wlabel.setObjectName(widget.key + '_label')
+
             wbox = QDoubleSpinBox()
             wbox.setObjectName(widget.key)
             wbox.setRange(*widget.range)  # SET RANGE BEFORE VALUE

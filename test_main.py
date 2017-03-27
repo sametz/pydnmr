@@ -4,8 +4,11 @@ from PyQt5.QtWidgets import QApplication, QDoubleSpinBox, QLabel
 from PyQt5.QtTest import QTest
 from PyQt5.QtCore import Qt
 
+# Uncomment to test on mock:
 import mock as main
 
+# Uncomment to test on real code:
+# import main
 app = QApplication(sys.argv)
 
 class TestMainGUi:

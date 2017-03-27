@@ -53,6 +53,7 @@ class dnmrGui(QMainWindow):
 
         self.simulation_vars = {}  # stores kwargs that model is called with
 
+        self.setObjectName('toplevel')
         self.setupUi()
 
     # TODO: determine why it's common to separate the following from __init__
@@ -63,6 +64,7 @@ class dnmrGui(QMainWindow):
         """
 
         centralWidget = QWidget()
+        centralWidget.setObjectName('centralwidget')
         self.setCentralWidget(centralWidget)
 
         centralLayout = QGridLayout()
@@ -73,7 +75,10 @@ class dnmrGui(QMainWindow):
         for i, widget in enumerate(twospin_vars):
             # The namedtuple construct facilitates widget generation:
             wlabel = QLabel(widget.string)
+            wlabel.setObjectName(widget.key + '_label')
+
             wbox = QDoubleSpinBox()
+            wbox.setObjectName(widget.key)
             wbox.setRange(*widget.range)  # SET RANGE BEFORE VALUE
             wbox.setValue(widget.value)
 
