@@ -38,4 +38,3 @@ def test_dnmrplot_2spin_fastexchange():
 #     WINDNMR_DEFAULTS = (165.00, 135.00, 1.50, 0.50, 0.50, 50.00)
 #     spectrum = dnmrplot_2spin(*WINDNMR_DEFAULTS)
 #     pt.popplot(*spectrum)
-

@@ -1,11 +1,11 @@
 # TODO: Write mre tests!
-import numpy as np
-# from pytest import approx
+# import numpy as np
+
 from .dnmrmath import *
 from .plottools import popplot
-from .dnmrplot import dnmrplot_2spin
+# from .dnmrplot import dnmrplot_2spin
 
-from .testdata import TWOSPIN_SLOW, TWOSPIN_COALESCE, TWOSPIN_FAST
+from .testdata import TWOSPIN_SLOW  # , TWOSPIN_COALESCE, TWOSPIN_FAST
 
 
 def get_intensity(spectrum, x):
@@ -109,5 +109,3 @@ def test_TwoSinglets_slow_exchange():
 
         np.testing.assert_almost_equal(calculated_intensity,
                                        peak[1])
-
-

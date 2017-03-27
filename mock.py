@@ -1,18 +1,10 @@
-"""
-The main GUI application to be run from the command line.
-"""
+"""Mock of main GUI for developing test_main GUI tests"""
 
 import sys
 from collections import namedtuple
 
-from PyQt5.QtWidgets import (QWidget, QGridLayout, QLabel, QDoubleSpinBox,
-                             QApplication, QMainWindow)
-from pyqtgraph import PlotWidget
-# noinspection PyUnresolvedReferences
-from pydnmr.dnmrplot import dnmrplot_2spin
-
-# If testing TwoSinglets class, uncomment the next line:
-# from dnmrmath import TwoSinglets
+from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QGridLayout,
+                             QLabel, QDoubleSpinBox)
 
 # Define the different types of input widgets that may be required.
 # Currently all inputs are QDoubleSpinBox.
@@ -38,34 +30,25 @@ twospin_vars = (va, vb, k, wa, wb, percent_a)
 
 
 class dnmrGui(QMainWindow):
-    """
-    Create the GUI for the application.
-
-    Currently the app features a single simulation model (two uncoupled
-    spins), and so a single main window. TODO: as models are added, create a
-    toggle between GUI windows tailored to each simulation (e.g. appropriate
-    widgets for data entry)
-    """
-
     def __init__(self, parent=None):
-
         super(dnmrGui, self).__init__(parent)
 
         self.simulation_vars = {}  # stores kwargs that model is called with
-
+        self.setObjectName('toplevel')
         self.setupUi()
 
-    # TODO: determine why it's common to separate the following from __init__
     def setupUi(self):
         """
-        Set up the GUI with the default moded, default variables,
-        and simulated lineshape.
-        """
+                Set up the GUI with the default moded, default variables,
+                and simulated lineshape.
+                """
 
         centralWidget = QWidget()
+        centralWidget.setObjectName('centralwidget')
         self.setCentralWidget(centralWidget)
 
         centralLayout = QGridLayout()
+        self.setObjectName('centrallayout')
         # More complex layouts can be considered in future, e.g. a horizontal
         #  layout containing a serious of vertical layouts containing labels
         # and spinboxes.
@@ -73,7 +56,9 @@ class dnmrGui(QMainWindow):
         for i, widget in enumerate(twospin_vars):
             # The namedtuple construct facilitates widget generation:
             wlabel = QLabel(widget.string)
+            wlabel.setObjectName(widget.key + '_label')
             wbox = QDoubleSpinBox()
+            wbox.setObjectName(widget.key)
             wbox.setRange(*widget.range)  # SET RANGE BEFORE VALUE
             wbox.setValue(widget.value)
 
@@ -82,6 +67,7 @@ class dnmrGui(QMainWindow):
 
             centralLayout.addWidget(wlabel, 0, i)
             centralLayout.addWidget(wbox, 1, i)
+
 
             # Using the lambda expression below allows extra information to
             # be passed to the self.update slot, allowing the delegator to
@@ -93,48 +79,23 @@ class dnmrGui(QMainWindow):
             wbox.valueChanged.connect(
                 lambda val, key=widget.key: self.update(key, val))
 
-        graphicsView = PlotWidget()
-        centralLayout.addWidget(graphicsView, 2, 0, 1, len(twospin_vars))
-        # lets the graph span the entire width of the window, no matter how
-        # many input widgets appear above
-
         centralWidget.setLayout(centralLayout)
-
-        self.plotdata = graphicsView.plot()
-        self.plotdata.getViewBox().invertX(True)  # Reverse x axis "NMR style"
-        self.plotdata.setData(*self.call_model())
 
         self.setGeometry(50, 50, 800, 600)
         self.setWindowTitle('pyDNMR')
-        self.statusBar().showMessage('Ready')
+
+        # va_box_fetch = self.findChild(QDoubleSpinBox, 'va')
+        # print("I found: ", va_box_fetch.objectName())
+        # print('Its parent is: ', va_box_fetch.parent().objectName())
+        # va_cw_fetch = self.findChild(QWidget, 'centralwidget')
+        # print('I found: ', va_cw_fetch.objectName())
+        # print('Its parent is: ', va_cw_fetch.parent().objectName())
+        # print('Its type is: ', type(va_cw_fetch.parent()))
+        # print('Is this the same as "self"?', va_cw_fetch.parent() is self)
 
 
-    def call_model(self):
-        """
-        Send the dictionary as **kwargs to the model
-        :return: a spectrum, consisting of a tuple of x and y coordinate arrays
-        """
-        x, y = dnmrplot_2spin(**self.simulation_vars)
-        return x, y
-
-    def update(self, key, val):
-        """
-        Detect a change in numerical input; record the change in
-        the dictionary of widget values; call the model to get an updated
-        spectrum; and plot the spectrum.
-        :param key: the dictionary key for the variable associated with the
-        signalling widget
-        :param val: the current value of the signalling widget
-        """
-        self.simulation_vars[key] = val
-
-        # Choose one of the following. TODO: speedtests to find fastest routine
-        self.plotdata.setData(*self.call_model())  # original routine
-
-        # OR:
-
-        # spectrum = TwoSinglets(**self.simulation_vars).spectrum()
-        # self.plotdata.setData(*spectrum)  # using new TwoSinglets class
+        def update(self, key, val):
+            pass
 
 if __name__ == '__main__':
 
