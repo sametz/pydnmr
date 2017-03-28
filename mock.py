@@ -50,7 +50,6 @@ class dnmrGui(QMainWindow):
         self.setCentralWidget(centralWidget)
 
         centralLayout = QGridLayout()
-        self.setObjectName('centrallayout')
         # More complex layouts can be considered in future, e.g. a horizontal
         #  layout containing a serious of vertical layouts containing labels
         # and spinboxes.
@@ -83,6 +82,7 @@ class dnmrGui(QMainWindow):
                 lambda val, key=widget.key: self.update(key, val))
 
         centralWidget.setLayout(centralLayout)
+        centralWidget.layout().setObjectName('centrallayout')
 
         self.setGeometry(50, 50, 800, 600)
         self.setWindowTitle('pyDNMR')
