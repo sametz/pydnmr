@@ -5,6 +5,9 @@ from collections import namedtuple
 
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QGridLayout,
                              QLabel, QDoubleSpinBox)
+from pyqtgraph import PlotWidget
+
+from pydnmr.dnmrplot import dnmrplot_2spin
 
 # Define the different types of input widgets that may be required.
 # Currently all inputs are QDoubleSpinBox.
@@ -30,6 +33,7 @@ twospin_vars = (va, vb, k, wa, wb, percent_a)
 
 
 class dnmrGui(QMainWindow):
+
     def __init__(self, parent=None):
 
         super(dnmrGui, self).__init__(parent)
@@ -81,24 +85,40 @@ class dnmrGui(QMainWindow):
             wbox.valueChanged.connect(
                 lambda val, key=widget.key: self.update(key, val))
 
+        graphicsView = PlotWidget()
+        centralLayout.addWidget(graphicsView, 2, 0, 1, len(twospin_vars))
+
         centralWidget.setLayout(centralLayout)
         centralWidget.layout().setObjectName('centrallayout')
+
+        self.plotdata = graphicsView.plot()
+        self.plotdata.getViewBox().invertX(True)  # Reverse x axis "NMR style"
+        self.plotdata.setData(*self.call_model())
 
         self.setGeometry(50, 50, 800, 600)
         self.setWindowTitle('pyDNMR')
 
-        # va_box_fetch = self.findChild(QDoubleSpinBox, 'va')
-        # print("I found: ", va_box_fetch.objectName())
-        # print('Its parent is: ', va_box_fetch.parent().objectName())
-        # va_cw_fetch = self.findChild(QWidget, 'centralwidget')
-        # print('I found: ', va_cw_fetch.objectName())
-        # print('Its parent is: ', va_cw_fetch.parent().objectName())
-        # print('Its type is: ', type(va_cw_fetch.parent()))
-        # print('Is this the same as "self"?', va_cw_fetch.parent() is self)
+    def call_model(self):
+        """
+        Send the dictionary as **kwargs to the model
+        :return: a spectrum, consisting of a tuple of x and y coordinate arrays
+        """
+        x, y = dnmrplot_2spin(**self.simulation_vars)
+        return x, y
 
 
-        def update(self, key, val):
-            pass
+    def update(self, key, val):
+        """
+        Detect a change in numerical input; record the change in
+        the dictionary of widget values; call the model to get an updated
+        spectrum; and plot the spectrum.
+        :param key: the dictionary key for the variable associated with the
+        signalling widget
+        :param val: the current value of the signalling widget
+        """
+        self.simulation_vars[key] = val
+
+        self.plotdata.setData(*self.call_model())  # original routine
 
 if __name__ == '__main__':
 

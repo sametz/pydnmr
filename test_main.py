@@ -2,14 +2,16 @@ import sys
 import pytest
 from PyQt5.QtWidgets import QApplication, QDoubleSpinBox, QLabel, \
     QGridLayout, QWidget
+from pyqtgraph import PlotWidget
 from PyQt5.QtTest import QTest
 from PyQt5.QtCore import Qt
 
 # Uncomment to test on mock:
-import mock as main
+# import mock as main
+from pydnmr.testdata import TWOSPIN_SLOW
 
 # Uncomment to test on real code:
-# import main
+import main
 app = QApplication(sys.argv)
 
 class TestMainGUi:
@@ -34,33 +36,45 @@ class TestMainGUi:
             assert found_label.text() == widget.string
 
     def test_two_singlet_grid_layout(self):
-        """The user sees that the top of the window is a 2 x 5 grid of 
-        numerical entries (bottom row) with corresponding labels (top row)"""
-        va_box_fetch = self.ui.findChild(QDoubleSpinBox, 'va')
-        print(va_box_fetch.parent().parent().objectName())
-        found_widget = self.ui.centralWidget().layout().itemAtPosition(0, 0)
-        print(found_widget.widget().text())
-        assert found_widget.widget().text() == 'Va'
-        #assert found_widget.objectName == 'va'
-        #assert va_box_fetch.objectName() == 'va'
+        """The user sees that the widgets are in a 2 x 5 grid of 
+        numerical entries (bottom row) with corresponding labels (top row). 
+        The labels have the correct text, and the numerical entries are 
+        correct for the default system.
+        """
+        layout = self.ui.findChild(QGridLayout, 'centrallayout')
+        widgetlist = main.twospin_vars
+        for i, widget in enumerate(widgetlist):
+            label_fetch = layout.itemAtPosition(0, i).widget()
+            box_fetch = layout.itemAtPosition(1, i).widget()
+            assert label_fetch.text() == widget.string
+            assert box_fetch.value() == widget.value
 
-        #assert 1 == 2  # TODO: Write more tests!
-        # # print(self.ui.layout().itemAt(0).text)
-        # va_box_fetch = self.ui.findChild(QDoubleSpinBox, 'va')
-        # assert va_box_fetch.objectName() == 'va'
-        # # assert self.ui.layout().itemAt(0) is not None
+    def test_graph_spans_bottom_of_frame(self):
+        """The user sees a graph object below the entry widgets, filling the 
+        bottom of the frame. Its data matches that of the default system.
+        """
+        # TODO: learn how to assert a widget is a certain class
+        # Test doesnt' test for correct graph widget, just contents
 
-    def test_alternate_widget_access(self):
-        """Just hacking away trying to find a more terse widget reference"""
-        main_layout = self.ui.findChild(QGridLayout, 'centrallayout')
-        found_widget = main_layout.itemAtPosition(0, 0)
-        print('Widget at coordinate 0, 0 is', type(found_widget))
-        print('This widget contains widget ', type(found_widget.widget()))
-        print('Its text is', found_widget.widget().text())
-        assert found_widget.widget().text() == 'Va'
-        found_widget2 = main_layout.itemAtPosition(0,0).widget()
-        print(type(found_widget2), found_widget2.objectName(),
-              found_widget2.text())
+        layout = self.ui.findChild(QGridLayout, 'centrallayout')
+        widget_2_0 = layout.itemAtPosition(2, 0).widget()
+        data = widget_2_0.listDataItems()
+
+        # Can't figure out how to find out what the graph data is, to compare
+        #  to an accepted set. For now, let's try to assure that the data
+        # returned from all 6 cells of bottom row are the same.
+        # TODO: learn how to retrieve data from pyqtgraph plot
+        for i in range(1, 6):
+            # using 'is' instead of '==' in next line didn't quite work
+            assert data == layout.itemAtPosition(2, i).widget().listDataItems()
+
+        # test that 7th column is empty
+        for j in range(3):
+            try:
+                found_widget = layout.itemAtPosition(j, 5).widget()
+                assert not found_widget
+            except:
+                print(found_widget)
 
     def test_find_central_widget(self):
         found_centralwidget = self.ui.findChild(QWidget, 'centralwidget')

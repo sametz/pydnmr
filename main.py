@@ -104,6 +104,7 @@ class dnmrGui(QMainWindow):
         # many input widgets appear above
 
         centralWidget.setLayout(centralLayout)
+        centralWidget.layout().setObjectName('centrallayout')
 
         self.plotdata = graphicsView.plot()
         self.plotdata.getViewBox().invertX(True)  # Reverse x axis "NMR style"
@@ -112,7 +113,6 @@ class dnmrGui(QMainWindow):
         self.setGeometry(50, 50, 800, 600)
         self.setWindowTitle('pyDNMR')
         self.statusBar().showMessage('Ready')
-
 
     def call_model(self):
         """
