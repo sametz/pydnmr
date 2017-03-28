@@ -106,7 +106,8 @@ class dnmrGui(QMainWindow):
         x, y = dnmrplot_2spin(**self.simulation_vars)
         return x, y
 
-
+    # TODO: this would override the builtin class function 'update'!
+    # You probably want to rename this!
     def update(self, key, val):
         """
         Detect a change in numerical input; record the change in

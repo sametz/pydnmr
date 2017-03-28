@@ -19,6 +19,32 @@ class TestMainGUi:
     def setup(self):
         self.ui = main.dnmrGui()
 
+        boxlist = [widget.key for widget in main.twospin_vars]
+        labellist = [box + '_label' for box in boxlist]
+        widgetlist = boxlist + labellist
+
+        # findChild can use tuples of object types, but my first pass at
+        # using it failed (returned 4 copies of wb and 4 copies of k).
+        # assembling piecewise:
+        boxdict = {widget: self.ui.findChild(QDoubleSpinBox, widget)
+                      for widget in boxlist}
+        labeldict = {widget: self.ui.findChild(QLabel, widget)
+                   for widget in labellist}
+        self.widgetdict = {**boxdict, **labeldict}
+        print('box list:', boxlist)
+        print('box dict:', boxdict)
+        print('label list:', labellist)
+        print('label dict:', labeldict)
+        print('widget list:', widgetlist)
+        print('widget dict:', self.widgetdict)
+    # def test_childAt(self):
+    #     fetch = self.ui.centralWidget().
+    #     fetchlist = self.ui.children()
+    #     print(fetchlist)
+    #     print("Fetched", fetch, 'object with name', fetch.objectName())
+    #     assert fetch.objectName() == 'va_label'
+    #     assert fetch.text() == 'Va'
+
     def test_title(self):
         """The user launches the app and sees that it is named 'pyDNMR'"""
         app_title = self.ui.windowTitle()
@@ -75,6 +101,18 @@ class TestMainGUi:
                 assert not found_widget
             except:
                 print(found_widget)
+
+    def test_twiddle_buttons(self):
+        """The user changed values in all of the numerical entries up and 
+        down, and the program didn't crash."""
+        assert self.widgetdict['va'].objectName() == 'va'
+        assert self.widgetdict['va_label'].text() == 'Va'
+
+
+        assert 1 == 2  # TODO: Finish test!
+
+    # tests below were used as part of debugging, but retained because they
+    # may detect a drastic change to the GUI
 
     def test_find_central_widget(self):
         found_centralwidget = self.ui.findChild(QWidget, 'centralwidget')
