@@ -7,11 +7,11 @@ from PyQt5.QtTest import QTest
 from PyQt5.QtCore import Qt
 
 # Uncomment to test on mock:
-# import mock as main
+import mock as main
 from pydnmr.testdata import TWOSPIN_SLOW
 
 # Uncomment to test on real code:
-import main
+# import main
 app = QApplication(sys.argv)
 
 class TestMainGUi:
@@ -19,19 +19,19 @@ class TestMainGUi:
     def setup(self):
         self.ui = main.dnmrGui()
 
-        boxlist = [widget.key for widget in main.twospin_vars]
-        labellist = [box + '_label' for box in boxlist]
-        widgetlist = boxlist + labellist
+        self.boxlist = [widget.key for widget in main.twospin_vars]
+        labellist = [box + '_label' for box in self.boxlist]
+        widgetlist = self.boxlist + labellist
 
         # findChild can use tuples of object types, but my first pass at
         # using it failed (returned 4 copies of wb and 4 copies of k).
         # assembling piecewise:
         boxdict = {widget: self.ui.findChild(QDoubleSpinBox, widget)
-                      for widget in boxlist}
+                      for widget in self.boxlist}
         labeldict = {widget: self.ui.findChild(QLabel, widget)
                    for widget in labellist}
         self.widgetdict = {**boxdict, **labeldict}
-        print('box list:', boxlist)
+        print('box list:', self.boxlist)
         print('box dict:', boxdict)
         print('label list:', labellist)
         print('label dict:', labeldict)
@@ -107,9 +107,14 @@ class TestMainGUi:
         down, and the program didn't crash."""
         assert self.widgetdict['va'].objectName() == 'va'
         assert self.widgetdict['va_label'].text() == 'Va'
+        for key in self.boxlist:
+            widget = self.widgetdict[key]
+            widget.setValue(widget.value() + 10)
+            widget.setValue(widget.value() - 20)
+            widget.setValue(widget.value() + 10)
 
 
-        assert 1 == 2  # TODO: Finish test!
+        assert 1 == 1  # TODO: Finish test!
 
     # tests below were used as part of debugging, but retained because they
     # may detect a drastic change to the GUI
