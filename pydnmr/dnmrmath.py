@@ -14,7 +14,7 @@ the last term is minus-over-plus, not plus-over-minus.)
 import numpy as np
 
 
-class twosinglets:
+class TwoSinglets:
     """
     Attempt at using a class instead of separate functions to represent two
     uncoupled spin-1/2 nuclei undergoing exchange.
@@ -55,7 +55,7 @@ class twosinglets:
 
     def intensity(self, v):
         """
-        Yield a function for the lineshape for twosinglets
+        Yield a function for the lineshape for TwoSinglets
         :param v: frequency
         :return: a frequency-dependent function that returns the intensity of
         the spectrum at frequency v
@@ -147,6 +147,11 @@ def d2s_func(va, vb, ka, wa, wb, pa):
     returns: a function that takes v (x coord or numpy linspace) as an argument
     and returns intensity (y).
     """
+
+    # Simulation seems correct even when va < vb.
+    # TODO: verify that this doesn't matter (apart from dnmrplot left/right
+    # limits) and doesn't need a check somewhere in the code.
+
     pi = np.pi
     pi_squared = pi ** 2
     T2a = 1 / (pi * wa)
@@ -167,12 +172,18 @@ def d2s_func(va, vb, ka, wa, wb, pa):
         :param v: frequency
         :return: function that calculates intensity
         """
-        nonlocal Dv, P, Q, R
-        Dv -= v
-        P -= tau * 4 * pi_squared * (Dv ** 2)
-        Q += tau * 2 * pi * Dv
-        R += Dv * r
-        return(P * p + Q * R) / (P ** 2 + R ** 2)
+        # FIXED: previous version of this function used
+        # nonlocal Dv, P, Q, R
+        # but apparently when function called repeatedly these values would
+        # become corrupted (turning into arrays?!)
+        # Solution: add underscores to create copies of any variables in
+        # outer scope whose values are changed in the inner scope.
+
+        _Dv = Dv - v
+        _P = P - tau * 4 * pi_squared * (_Dv ** 2)
+        _Q = Q + tau * 2 * pi * _Dv
+        _R = R + _Dv * r
+        return(_P * p + _Q * _R) / (_P ** 2 + _R ** 2)
     return maker
 
 
