@@ -3,6 +3,7 @@
 import numpy as np
 from . import testdata
 from .dnmrplot import dnmrplot_2spin
+from .plottools import popplot
 
 
 def test_dnmrplot_2spin_slowexchange():
@@ -30,6 +31,14 @@ def test_dnmrplot_2spin_fastexchange():
     accepted_x, accepted_y = testdata.TWOSPIN_FAST
     np.testing.assert_array_almost_equal(x, accepted_x)
     np.testing.assert_array_almost_equal(y, accepted_y)
+
+def test_dnmrplot_2spin_frequencies_commute():
+
+    freqorder_ab = dnmrplot_2spin(165.00, 135.00, 1.50, 2.50, 0.50, 75.00)
+    freqorder_ba = dnmrplot_2spin(135.00, 165.00, 1.50, 0.50, 2.50, 25.00)
+    popplot(*freqorder_ab)
+    popplot(*freqorder_ba)
+    np.testing.assert_array_almost_equal(freqorder_ab, freqorder_ba)
 
 
 # if __name__ == "__main__":
