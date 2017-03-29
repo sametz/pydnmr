@@ -17,8 +17,8 @@ def dnmrplot_2spin(va, vb, k, wa, wb, percent_a):
     Returns: tuple of arrays for x and y coordinates
     """
 
-    l_limit = vb - 50
-    r_limit = va + 50
+    l_limit = min([va, vb]) - 50
+    r_limit = max([va, vb]) + 50
     x = np.linspace(l_limit, r_limit, 800)
     # y = two_spin(x, va, vb, k, wa, wb, percent_a)
 

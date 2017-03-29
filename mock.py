@@ -3,8 +3,8 @@
 import sys
 from collections import namedtuple
 
-from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QGridLayout,
-                             QLabel, QDoubleSpinBox)
+from PyQt5.QtWidgets import (QWidget, QGridLayout, QLabel, QDoubleSpinBox,
+                             QApplication, QMainWindow)
 from pyqtgraph import PlotWidget
 
 from pydnmr.dnmrplot import dnmrplot_2spin
@@ -45,9 +45,9 @@ class dnmrGui(QMainWindow):
 
     def setupUi(self):
         """
-                Set up the GUI with the default moded, default variables,
-                and simulated lineshape.
-                """
+        Set up the GUI with the default moded, default variables,
+        and simulated lineshape.
+        """
 
         centralWidget = QWidget()
         centralWidget.setObjectName('centralwidget')
@@ -74,7 +74,6 @@ class dnmrGui(QMainWindow):
             centralLayout.addWidget(wlabel, 0, i)
             centralLayout.addWidget(wbox, 1, i)
 
-
             # Using the lambda expression below allows extra information to
             # be passed to the self.update slot, allowing the delegator to
             # see who sent the signal, update the dictionary of model inputs,
@@ -97,6 +96,7 @@ class dnmrGui(QMainWindow):
 
         self.setGeometry(50, 50, 800, 600)
         self.setWindowTitle('pyDNMR')
+        self.statusBar().showMessage('Ready')
 
     def call_model(self):
         """
@@ -120,6 +120,7 @@ class dnmrGui(QMainWindow):
         self.simulation_vars[key] = val
 
         self.plotdata.setData(*self.call_model())  # original routine
+
 
 if __name__ == '__main__':
 

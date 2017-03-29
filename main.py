@@ -8,11 +8,8 @@ from collections import namedtuple
 from PyQt5.QtWidgets import (QWidget, QGridLayout, QLabel, QDoubleSpinBox,
                              QApplication, QMainWindow)
 from pyqtgraph import PlotWidget
-# noinspection PyUnresolvedReferences
-from pydnmr.dnmrplot import dnmrplot_2spin
 
-# If testing TwoSinglets class, uncomment the next line:
-# from dnmrmath import TwoSinglets
+from pydnmr.dnmrplot import dnmrplot_2spin
 
 # Define the different types of input widgets that may be required.
 # Currently all inputs are QDoubleSpinBox.
@@ -142,6 +139,7 @@ class dnmrGui(QMainWindow):
 
         # spectrum = TwoSinglets(**self.simulation_vars).spectrum()
         # self.plotdata.setData(*spectrum)  # using new TwoSinglets class
+
 
 if __name__ == '__main__':
 

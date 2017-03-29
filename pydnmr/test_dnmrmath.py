@@ -1,4 +1,4 @@
-# TODO: Write mre tests!
+# TODO: Write more tests!
 # import numpy as np
 
 from .dnmrmath import *

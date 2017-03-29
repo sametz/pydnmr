@@ -147,6 +147,11 @@ def d2s_func(va, vb, ka, wa, wb, pa):
     returns: a function that takes v (x coord or numpy linspace) as an argument
     and returns intensity (y).
     """
+
+    # Simulation seems correct even when va < vb.
+    # TODO: verify that this doesn't matter (apart from dnmrplot left/right
+    # limits) and doesn't need a check somewhere in the code.
+
     pi = np.pi
     pi_squared = pi ** 2
     T2a = 1 / (pi * wa)

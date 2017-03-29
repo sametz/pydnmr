@@ -1,18 +1,15 @@
 import sys
-import pytest
+
 from PyQt5.QtWidgets import QApplication, QDoubleSpinBox, QLabel, \
     QGridLayout, QWidget
-from pyqtgraph import PlotWidget
-from PyQt5.QtTest import QTest
-from PyQt5.QtCore import Qt
 
 # Uncomment to test on mock:
 import mock as main
-from pydnmr.testdata import TWOSPIN_SLOW
 
 # Uncomment to test on real code:
 # import main
 app = QApplication(sys.argv)
+
 
 class TestMainGUi:
 
@@ -27,9 +24,9 @@ class TestMainGUi:
         # using it failed (returned 4 copies of wb and 4 copies of k).
         # assembling piecewise:
         boxdict = {widget: self.ui.findChild(QDoubleSpinBox, widget)
-                      for widget in self.boxlist}
+                   for widget in self.boxlist}
         labeldict = {widget: self.ui.findChild(QLabel, widget)
-                   for widget in labellist}
+                     for widget in labellist}
         self.widgetdict = {**boxdict, **labeldict}
         print('box list:', self.boxlist)
         print('box dict:', boxdict)
@@ -37,13 +34,6 @@ class TestMainGUi:
         print('label dict:', labeldict)
         print('widget list:', widgetlist)
         print('widget dict:', self.widgetdict)
-    # def test_childAt(self):
-    #     fetch = self.ui.centralWidget().
-    #     fetchlist = self.ui.children()
-    #     print(fetchlist)
-    #     print("Fetched", fetch, 'object with name', fetch.objectName())
-    #     assert fetch.objectName() == 'va_label'
-    #     assert fetch.text() == 'Va'
 
     def test_title(self):
         """The user launches the app and sees that it is named 'pyDNMR'"""
@@ -100,11 +90,19 @@ class TestMainGUi:
                 found_widget = layout.itemAtPosition(j, 5).widget()
                 assert not found_widget
             except:
-                print(found_widget)
+                print("Unexpected widgets found in column 7")
+
+    def test_status_bar_ready(self):
+        """The user sees a 'Ready' status indicator at the bottom of the app 
+        window.
+        """
+        statusbar_text = self.ui.statusBar().currentMessage()
+        assert statusbar_text == 'Ready'
 
     def test_twiddle_buttons(self):
         """The user changed values in all of the numerical entries up and 
-        down, and the program didn't crash."""
+        down, and the program didn't crash.
+        """
         assert self.widgetdict['va'].objectName() == 'va'
         assert self.widgetdict['va_label'].text() == 'Va'
         for key in self.boxlist:
@@ -113,8 +111,12 @@ class TestMainGUi:
             widget.setValue(widget.value() - 20)
             widget.setValue(widget.value() + 10)
 
-
-        assert 1 == 1  # TODO: Finish test!
+        for widget in main.twospin_vars:
+            if widget.value > 10:
+                assert self.widgetdict[widget.key].value() == widget.value
+            else:
+                assert self.widgetdict[widget.key].value() == 10.01
+                # k and wa/b widgets should not go below 0.01
 
     # tests below were used as part of debugging, but retained because they
     # may detect a drastic change to the GUI
