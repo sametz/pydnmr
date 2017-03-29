@@ -3,11 +3,15 @@ import sys
 from PyQt5.QtWidgets import QApplication, QDoubleSpinBox, QLabel, \
     QGridLayout, QWidget
 
+# Test can be run on either the actual main.py app, or a mockup named mock.py.
+# Choose which to test:
+
 # Uncomment to test on mock:
-import mock as main
+# import mock as main
 
 # Uncomment to test on real code:
-# import main
+import main
+
 app = QApplication(sys.argv)
 
 
@@ -89,7 +93,7 @@ class TestMainGUi:
             try:
                 found_widget = layout.itemAtPosition(j, 5).widget()
                 assert not found_widget
-            except:
+            except Exception:
                 print("Unexpected widgets found in column 7")
 
     def test_status_bar_ready(self):
@@ -149,7 +153,7 @@ class TestMainGUi:
                 print('Widget ', current_widget.objectName(), ' has parent ',
                       current_widget.parent().objectName())
                 current_widget = current_widget.parent()
-            except:
+            except Exception:
                 print('The parent of', current_widget.objectName(),
                       'is of type', type(current_widget.parent()))
                 print('No more parents.')

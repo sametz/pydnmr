@@ -1,9 +1,10 @@
 # TODO: Write more tests!
 
 import numpy as np
-from . import testdata
-from .dnmrplot import dnmrplot_2spin
-from .plottools import popplot
+
+from tests import testdata
+from tests.plottools import popplot
+from pydnmr.dnmrplot import dnmrplot_2spin
 
 
 def test_dnmrplot_2spin_slowexchange():
