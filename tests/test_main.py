@@ -107,8 +107,7 @@ class TestMainGUi:
         """The user changed values in all of the numerical entries up and 
         down, and the program didn't crash.
         """
-        assert self.widgetdict['va'].objectName() == 'va'
-        assert self.widgetdict['va_label'].text() == 'Va'
+
         for key in self.boxlist:
             widget = self.widgetdict[key]
             widget.setValue(widget.value() + 10)
