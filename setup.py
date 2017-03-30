@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='pydnmr',
-    version='0.1.0',
+    version='0.2.0',
     packages=['tests', 'pydnmr'],
     url='https://github.com/sametz/pydnmr',
     license='MIT',

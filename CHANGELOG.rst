@@ -21,7 +21,7 @@ The format is inspired by `Keep a Changelog <http://keepachangelog.com/en/0.3.0/
 
 * **Version 1.0.0 release**: a minimal app suitable for educational use and not requiring execution from the command line interface.
 
-0.x - 2017-03-29 (alpha release)
+0.2.0 - 2017-03-29 (alpha release)
 ----------------------------------
 
 Added
