@@ -1,5 +1,5 @@
-pyDNMR (alpha)
-******************
+pyDNMR v0.2.0 (alpha)
+*********************
 
 pyDNMR simulates dynamic nuclear magnetic resonance (DNMR) spectra. A graphical user interface provides inputs for simulation parameters (frequencies, rate constants, line widths, and the population of various states), and displays the resulting spectrum.
 
@@ -39,6 +39,8 @@ Steps to a Version 1 release:
 * Minor tweaks to GUI appearance/functionality, such as graph color/behavior and accelerated scrolling in number widgets
 
 * Elaborating setup.py and freezing the app as a 1-file executable, for OSX/Win/Unix.
+
+See the CHANGELOG for the anticipated changes required to progress from alpha to beta to pre-release to Version 1.0.0.
 
 ----
 
