@@ -4,7 +4,7 @@ setup(
     name='pydnmr',
     version='0.1.0',
     packages=['tests', 'pydnmr'],
-    url='',
+    url='https://github.com/sametz/pydnmr',
     license='MIT',
     author='Geoffrey M. Sametz',
     author_email='sametz@udel.edu',
