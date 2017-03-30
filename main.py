@@ -8,10 +8,8 @@ from collections import namedtuple
 from PyQt5.QtWidgets import (QWidget, QGridLayout, QLabel, QDoubleSpinBox,
                              QApplication, QMainWindow)
 from pyqtgraph import PlotWidget
-from dnmrplot import dnmrplot_2spin
 
-# If testing twosinglets class, uncomment the next line:
-# from dnmrmath import twosinglets
+from pydnmr.dnmrplot import dnmrplot_2spin
 
 # Define the different types of input widgets that may be required.
 # Currently all inputs are QDoubleSpinBox.
@@ -26,8 +24,8 @@ var = namedtuple('var', ['key', 'string', 'value', 'range'])
 va = var(key='va', string='Va', value=165.00, range=(0.00, 10000.00))
 vb = var(key='vb', string='Vb', value=135.00, range=(0.00, 10000.00))
 k = var(key='k', string='k', value=1.50, range=(0.01, 1000.00))
-wa = var(key='wa', string='Wa', value=0.50, range=(0.00, 100.00))
-wb = var(key='wb', string='Wb', value=0.50, range=(0.00, 100.00))
+wa = var(key='wa', string='Wa', value=0.50, range=(0.01, 100.00))
+wb = var(key='wb', string='Wb', value=0.50, range=(0.01, 100.00))
 percent_a = var(key='percent_a', string='%a', value=50.00, range=(0.00, 100.00))
 
 # Each type of calculation will have its own ordering of input widgets:
@@ -52,6 +50,7 @@ class dnmrGui(QMainWindow):
 
         self.simulation_vars = {}  # stores kwargs that model is called with
 
+        self.setObjectName('toplevel')
         self.setupUi()
 
     # TODO: determine why it's common to separate the following from __init__
@@ -62,6 +61,7 @@ class dnmrGui(QMainWindow):
         """
 
         centralWidget = QWidget()
+        centralWidget.setObjectName('centralwidget')
         self.setCentralWidget(centralWidget)
 
         centralLayout = QGridLayout()
@@ -72,7 +72,10 @@ class dnmrGui(QMainWindow):
         for i, widget in enumerate(twospin_vars):
             # The namedtuple construct facilitates widget generation:
             wlabel = QLabel(widget.string)
+            wlabel.setObjectName(widget.key + '_label')
+
             wbox = QDoubleSpinBox()
+            wbox.setObjectName(widget.key)
             wbox.setRange(*widget.range)  # SET RANGE BEFORE VALUE
             wbox.setValue(widget.value)
 
@@ -88,6 +91,7 @@ class dnmrGui(QMainWindow):
             # call the model for a simulation result, and plot it. See:
             # https://mfitzp.io/article/transmit-extra-data-with-signals-in-pyqt/
 
+            # noinspection PyUnresolvedReferences
             wbox.valueChanged.connect(
                 lambda val, key=widget.key: self.update(key, val))
 
@@ -97,6 +101,7 @@ class dnmrGui(QMainWindow):
         # many input widgets appear above
 
         centralWidget.setLayout(centralLayout)
+        centralWidget.layout().setObjectName('centrallayout')
 
         self.plotdata = graphicsView.plot()
         self.plotdata.getViewBox().invertX(True)  # Reverse x axis "NMR style"
@@ -114,6 +119,8 @@ class dnmrGui(QMainWindow):
         x, y = dnmrplot_2spin(**self.simulation_vars)
         return x, y
 
+    # TODO: this would override the builtin class function 'update'!
+    # You probably want to rename this!
     def update(self, key, val):
         """
         Detect a change in numerical input; record the change in
@@ -130,8 +137,9 @@ class dnmrGui(QMainWindow):
 
         # OR:
 
-        # spectrum = twosinglets(**self.simulation_vars).spectrum()
-        # self.plotdata.setData(*spectrum)  # using new twosinglets class
+        # spectrum = TwoSinglets(**self.simulation_vars).spectrum()
+        # self.plotdata.setData(*spectrum)  # using new TwoSinglets class
+
 
 if __name__ == '__main__':
 

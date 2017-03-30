@@ -1,5 +1,5 @@
-pyDNMR (pre-alpha)
-******************
+pyDNMR v0.2.0 (alpha)
+*********************
 
 pyDNMR simulates dynamic nuclear magnetic resonance (DNMR) spectra. A graphical user interface provides inputs for simulation parameters (frequencies, rate constants, line widths, and the population of various states), and displays the resulting spectrum.
 
@@ -14,9 +14,13 @@ A secondary purpose of this project is to provide a test case for the author to 
 Installation and Use
 ====================
 
-Everything outside the pydnmr/pydnmr folder is a work in progress, including setup.py and tests, and should not be trusted.
+This is a work in progress. In the main branch, the main application (main.py)
+and its dependencies in the pydnmr subfolder should provide a basic,
+functional application. Everything else, including setup.py, should not be
+trusted.
 
-The brave and curious can copy the contents of the pydnmr/pydnmr folder, and run the program from the command line:
+The brave and curious can copy main.py plus the pydnmr/pydnmr subfolder, and
+run the program from the command line:
 
     ``python main.py``
 
@@ -25,19 +29,18 @@ The brave and curious can copy the contents of the pydnmr/pydnmr folder, and run
 TODO:
 =====
 
-----
 
 Steps to a Version 1 release:
 
 * Determine what other package components to add (documentation, Sphinx, makefiles, a manual, etc.)
-
-* Add functional and unit tests
 
 * Check PEP8/PEP257 compliance for code style
 
 * Minor tweaks to GUI appearance/functionality, such as graph color/behavior and accelerated scrolling in number widgets
 
 * Elaborating setup.py and freezing the app as a 1-file executable, for OSX/Win/Unix.
+
+See the CHANGELOG for the anticipated changes required to progress from alpha to beta to pre-release to Version 1.0.0.
 
 ----
 
