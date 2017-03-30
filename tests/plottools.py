@@ -14,6 +14,7 @@ def popplot(x, y, invertx=True):
     popup = pg.plot()
     popup.getViewBox().invertX(invertx)  # Reverse x axis "NMR style"
     popup.plot(x, y)
+    # noinspection PyUnresolvedReferences
     pg.QtGui.QApplication.exec_()
 
 
