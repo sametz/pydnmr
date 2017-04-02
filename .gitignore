@@ -1,6 +1,5 @@
 
 /.cache/
-/pydnmr/Qt/
 /.idea/
 /tests/.cache/
 __pycache__/
