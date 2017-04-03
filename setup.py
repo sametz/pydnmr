@@ -9,5 +9,5 @@ setup(
     author='Geoffrey M. Sametz',
     author_email='sametz@udel.edu',
     description='Simulation of dynamic nuclear magnetic resonance (DNMR) spectra',
-    requires=['PyQt5']
+    requires=['PyQt5', 'pyqtgraph']
 )

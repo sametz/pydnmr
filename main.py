@@ -26,7 +26,7 @@ va = var(key='va', string=str('ν')+'<sub>A</sub>', value=165.00,
          range=(0.00, 10000.00))
 vb = var(key='vb', string=str('ν')+'<sub>B</sub>', value=135.00,
          range=(0.00, 10000.00))
-k = var(key='k', string='k', value=1.50,
+k = var(key='k', string='k<sub>A</sub>', value=1.50,
         range=(0.01, 1000.00))
 wa = var(key='wa', string='W<sub>A</sub>', value=0.50,
          range=(0.01, 100.00))

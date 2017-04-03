@@ -1,11 +1,13 @@
 pyDNMR v0.2.0 (alpha)
 *********************
 
+.. image:: docs/source/pydnmrimg.png
+
 pyDNMR simulates dynamic nuclear magnetic resonance (DNMR) spectra. A graphical user interface provides inputs for simulation parameters (frequencies, rate constants, line widths, and the population of various states), and displays the resulting spectrum.
 
-The short-term goal of this project is to include the simulation for two coupled nuclei as well, and create platform-specific executable files ("apps") for educational use. For example, the rate constant for nuclear exchange can be adjusted up and down to show coalescence of signals.
+The current version of pyDNMR only includes the simulation for two uncoupled spin-1/2 nuclei undergoing exchange. The short-term goal of this project is to include the simulation for two coupled nuclei as well, and to create platform-specific executable files ("apps") for educational use. For example, the rate constant for nuclear exchange can be adjusted up and down to demonstrate coalescence of signals.
 
-The longer-term goal of this project is to add simulations for more complex systems, and to provide additional tools (e.g. matching experimental and simulated lineshapes) that would result in an application suitable for researchers as well as educators.
+The longer-term goal of this project is to add simulations for more complex systems, and to provide additional tools (e.g. importation of NMR spectra, and matching experimental to simulated lineshapes) that would result in an application suitable for researchers as well as educators.
 
 A secondary purpose of this project is to provide a test case for the author to learn how to properly test, package, and distribute software. Which leads to:
 
@@ -32,13 +34,15 @@ TODO:
 
 Steps to a Version 1 release:
 
-* Determine what other package components to add (documentation, Sphinx, makefiles, a manual, etc.)
+* Finish documentation with Sphinx
 
 * Check PEP8/PEP257 compliance for code style
 
-* Minor tweaks to GUI appearance/functionality, such as graph color/behavior and accelerated scrolling in number widgets
+* Check that setup.py and requirements.txt allow another user to install the software.
 
-* Elaborating setup.py and freezing the app as a 1-file executable, for OSX/Win/Unix.
+* Use tox to test if pydnmr works with other Python verstions etc.
+
+* Freeze the app, preferably as a 1-file executable, for OSX/Win/Unix.
 
 See the CHANGELOG for the anticipated changes required to progress from alpha to beta to pre-release to Version 1.0.0.
 
