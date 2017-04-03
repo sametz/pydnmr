@@ -37,8 +37,6 @@ TODO:
 
 Steps to a Version 1 release:
 
-* Finish documentation with Sphinx
-
 * Check PEP8/PEP257 compliance for code style
 
 * Check that setup.py and requirements.txt allow another user to install the software.
