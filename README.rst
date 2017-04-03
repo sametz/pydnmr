@@ -1,7 +1,7 @@
-.. image:: docs/source/pydnmrimg.png
-
 pyDNMR v0.2.0 (alpha)
 *********************
+
+.. image:: docs/source/pydnmrimg.png
 
 pyDNMR simulates dynamic nuclear magnetic resonance (DNMR) spectra. A graphical user interface provides inputs for simulation parameters (frequencies, rate constants, line widths, and the population of various states), and displays the resulting spectrum.
 
