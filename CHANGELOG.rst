@@ -21,6 +21,26 @@ The format is inspired by `Keep a Changelog <http://keepachangelog.com/en/0.3.0/
 
 * **Version 1.0.0 release**: a minimal app suitable for educational use and not requiring execution from the command line interface.
 
+
+Unreleased
+----------
+
+Added
+^^^^^
+
+* Documentation implemented with Sphinx. Link to Sphinx-generated documentation
+ PDF added to README.rst.
+
+* Screenshots added to documentation and README.rst.
+
+Changed
+^^^^^^^
+
+* GUI appearance and widget labels
+
+* Acceleration added to numerical entries' increment/decrement functionality
+
+
 0.2.0 - 2017-03-29 (alpha release)
 ----------------------------------
 

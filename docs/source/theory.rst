@@ -1,5 +1,5 @@
-Theoretical Background
-======================
+Theory
+======
 
 The current version of pyDNMR simulates the case of two-site exchange for
 uncoupled spin-1/2 nuclei. Other simple systems that do not require a quantum-mechanical treatment will be introduced after a stable Version 1 distribution is finished.
