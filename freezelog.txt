@@ -1,4 +1,4 @@
-A list of steps I took to get PyInstaller to freeze pydnmr on my mac with the
+A list of steps I took to get PyInstaller to freeze pydnmr on my macs with the
  Anaconda install.
 
 * jinja2 was downgraded to 2.8.1:

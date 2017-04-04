@@ -29,4 +29,4 @@ Inside the plot of the spectrum:
 
 * Right click and drag expands/contracts the spectrum horizontally/vertically.
 
-* Right click currently opens up menus of options that have not been fully tested yet. Some options (exporting to .csv) appear to work, but others (exporting as a matplotlib plot or an image file) crash the program. These options are built into the third-party pyqtgraph library that pyDNMR imports.
+* Right click currently opens up menus of options that have not been fully tested yet. These options are built into the third-party pyqtgraph library that pyDNMR imports.
