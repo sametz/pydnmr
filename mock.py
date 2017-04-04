@@ -5,7 +5,8 @@ from collections import namedtuple
 
 from PyQt5.QtWidgets import (QWidget, QGridLayout, QLabel, QDoubleSpinBox,
                              QApplication, QMainWindow)
-from pyqtgraph import PlotWidget
+from PyQt5.QtCore import Qt
+from pyqtgraph import PlotWidget, setConfigOption
 
 from pydnmr.dnmrplot import dnmrplot_2spin
 
@@ -19,12 +20,18 @@ from pydnmr.dnmrplot import dnmrplot_2spin
 
 # Widget presets:
 var = namedtuple('var', ['key', 'string', 'value', 'range'])
-va = var(key='va', string='Va', value=165.00, range=(0.00, 10000.00))
-vb = var(key='vb', string='Vb', value=135.00, range=(0.00, 10000.00))
-k = var(key='k', string='k', value=1.50, range=(0.01, 1000.00))
-wa = var(key='wa', string='Wa', value=0.50, range=(0.01, 100.00))
-wb = var(key='wb', string='Wb', value=0.50, range=(0.01, 100.00))
-percent_a = var(key='percent_a', string='%a', value=50.00, range=(0.00, 100.00))
+va = var(key='va', string=str('ν')+'<sub>A</sub>', value=165.00,
+         range=(0.00, 10000.00))
+vb = var(key='vb', string=str('ν')+'<sub>B</sub>', value=135.00,
+         range=(0.00, 10000.00))
+k = var(key='k', string='k<sub>A</sub>', value=1.50,
+        range=(0.01, 1000.00))
+wa = var(key='wa', string='W<sub>A</sub>', value=0.50,
+         range=(0.01, 100.00))
+wb = var(key='wb', string='W<sub>B</sub>', value=0.50,
+         range=(0.01, 100.00))
+percent_a = var(key='percent_a', string='% A', value=50.00,
+                range=(0.00, 100.00))
 
 # Each type of calculation will have its own ordering of input widgets:
 twospin_vars = (va, vb, k, wa, wb, percent_a)
@@ -50,6 +57,8 @@ class dnmrGui(QMainWindow):
         """
 
         centralWidget = QWidget()
+        centralWidget.setAutoFillBackground(True)
+        centralWidget.setStyleSheet("background-color: rgb(60, 63, 65);")
         centralWidget.setObjectName('centralwidget')
         self.setCentralWidget(centralWidget)
 
@@ -62,11 +71,16 @@ class dnmrGui(QMainWindow):
             # The namedtuple construct facilitates widget generation:
             wlabel = QLabel(widget.string)
             wlabel.setObjectName(widget.key + '_label')
+            wlabel.setStyleSheet('color: white')
+            wlabel.setAlignment(Qt.AlignCenter)
 
             wbox = QDoubleSpinBox()
             wbox.setObjectName(widget.key)
+            wbox.setStyleSheet('color: white')
             wbox.setRange(*widget.range)  # SET RANGE BEFORE VALUE
             wbox.setValue(widget.value)
+            wbox.setAlignment(Qt.AlignCenter)
+            wbox.setAccelerated(True)
 
             # populate the dictionary with initial simulation variables
             self.simulation_vars[widget.key] = widget.value
@@ -84,6 +98,8 @@ class dnmrGui(QMainWindow):
             wbox.valueChanged.connect(
                 lambda val, key=widget.key: self.update(key, val))
 
+        setConfigOption('background', (43, 43, 43))
+        setConfigOption('foreground', (187, 187, 187))
         graphicsView = PlotWidget()
         centralLayout.addWidget(graphicsView, 2, 0, 1, len(twospin_vars))
 

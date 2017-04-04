@@ -75,6 +75,12 @@ class TwoSinglets:
         return (P * p + Q * R) / (P ** 2 + R ** 2)
 
     def spectrum(self):
+        """
+        Calculate a DNMR spectrum, using the parameters TwoSinglets was 
+        instantiated with.
+        :return: a tuple of numpy arrays (x = numpy linspace representing 
+        frequencies, y = numpy array of intensities along those frequencies)pwd
+        """
         x = np.linspace(self.l_limit, self.r_limit, 800)
         y = self.intensity(x)
 
