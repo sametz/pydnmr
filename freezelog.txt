@@ -1,0 +1,20 @@
+A list of steps I took to get PyInstaller to freeze pydnmr on my mac with the
+ Anaconda install.
+
+* jinja2 was downgraded to 2.8.1:
+    conda install jinja2=2.8.1
+    http://stackoverflow.com/questions/43163201/pyinstaller-syntax-error-yield-inside-async-function-python-3-5-1
+    Apparently 2.9 added something for Python 3.6. The error doesn't occur in
+     3.6--but PyInstaller doesn't work past 3.5.
+
+
+* got rid of mkl support with numpy etc:
+     conda install nomkl
+     https://github.com/BVLC/caffe/issues/3884
+
+* I restored my anaconda installation, and tried the above in a new conda
+environment, but wasn't getting it to work. I tried, on my desktop mac, the
+following and then was able to freeze with pyinstaller:
+    conda install nomkl numpy scipy scikit-learn numexpr
+    conda remove mkl mkl-service
+    https://www.continuum.io/blog/developer-blog/anaconda-25-release-now-mkl-optimizations
