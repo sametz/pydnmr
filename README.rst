@@ -6,6 +6,11 @@ pyDNMR v0.3.0 (alpha)
 `Documentation (.pdf)`_.
 
 .. _Documentation (.pdf): docs/build/latex/pyDNMR.pdf
+
+Stand-alone executable applications for Windows and OS X here_.
+
+.. _here: https://github.com/sametz/pydnmr/releases/tag/v0.3.0
+
 pyDNMR simulates dynamic nuclear magnetic resonance (DNMR) spectra. A graphical user interface provides inputs for simulation parameters (frequencies, rate constants, line widths, and the population of various states), and displays the resulting spectrum.
 
 The current version of pyDNMR only includes the simulation for two uncoupled spin-1/2 nuclei undergoing exchange. The short-term goal of this project is to include the simulation for two coupled nuclei as well, and to create platform-specific executable files ("apps") for educational use. For example, the rate constant for nuclear exchange can be adjusted up and down to demonstrate coalescence of signals.
@@ -42,8 +47,6 @@ Steps to a Version 1 release:
 * Check that setup.py and requirements.txt allow another user to install the software.
 
 * Use tox to test if pydnmr works with other Python verstions etc.
-
-* Freeze the app, preferably as a 1-file executable, for OSX/Win/Unix.
 
 See the CHANGELOG for the anticipated changes required to progress from alpha to beta to pre-release to Version 1.0.0.
 
