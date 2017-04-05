@@ -28,8 +28,9 @@ The format is inspired by `Keep a Changelog <http://keepachangelog.com/en/0.3.0/
 Added
 ^^^^^
 
-* Documentation implemented with Sphinx. Link to Sphinx-generated documentation
- PDF added to README.rst.
+* Stand-alone executable files (no Python required) included for Windows and Mac OS X
+
+* Documentation implemented with Sphinx. Link to Sphinx-generated documentation (PDF) added to README.rst.
 
 * Screenshots added to documentation and README.rst.
 
