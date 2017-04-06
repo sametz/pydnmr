@@ -1,0 +1,11 @@
+Notes on getting tox to work:
+
+On my mac, pyenv was able to install pythons 3.2 through 3.6, and pyenv could see them (e.g. `pyenv version`). However, `python3.x [--version]` attemts showed the system could not find them. The system did find older 3.4 and 3.5 pythons that were prevously installed.
+
+Installing tox-pyenv fixed the problem, allowing tox to find the pythons.
+However, it could not import the tests. Online searches indicated adding
+setenv= PYTHONPATH= {various suggestions} in tox.ini would solve the problem, but it did not. HOWEVER, adding the following line under [testenv] in tox.ini fixed everything:
+
+commands = pytest {posargs:tests}
+
+which explicitly told pytest to run the tests in the tests folder. Tox has its own tests for each python version, though, and this fix results in only the package's own tests being run.
