@@ -24,15 +24,18 @@ A secondary purpose of this project is to provide a test case for the author to 
 Installation and Use
 ====================
 
-This is a work in progress. In the main branch, the main application (main.py)
-and its dependencies in the pydnmr subfolder should provide a basic,
-functional application. Everything else, including setup.py, should not be
-trusted.
+For Windows and Mac OS X, the application is frozen as a single-file,
+double-click-to-run application (see link above). Nothing besides the executable file needs to be installed.
 
-The brave and curious can copy main.py plus the pydnmr/pydnmr subfolder, and
-run the program from the command line:
+If you want to run the program from the Python source code itself, at a minimum you will need main.py plus the pydnmr subfolder and its contents. The code should work for Python version 3.5 and up. The dependencies listed in requirements.txt are also required.
+If pip is installed, the following command should automatically install the required dependencies:
 
-    ``python main.py``
+    ``pip install -r requirements.txt``
+
+If you are familiar with virtual environments (e.g. using virtualenv, venv, or conda), you may wish to create one specifically for running this code, and install requirements there. If you use an Anaconda installation of Python, it is quite easy to set up and switch between different environments. See `the conda documentation`_ for details.
+
+.. _the conda documentation: https://conda.io/docs/using/envs.html
+
 
 ----
 
@@ -44,9 +47,9 @@ Steps to a Version 1 release:
 
 * Check PEP8/PEP257 compliance for code style
 
-* Check that setup.py and requirements.txt allow another user to install the software.
+* Verify that the frozen apps and python code run on a variety of systems
 
-* Use tox to test if pydnmr works with other Python verstions etc.
+* Possibly include the model for two coupled spin-1/2 nuclei as well
 
 See the CHANGELOG for the anticipated changes required to progress from alpha to beta to pre-release to Version 1.0.0.
 
