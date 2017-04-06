@@ -1,2 +1,4 @@
-pyqtgraph
-PyQt5
+numpy==1.11.1
+PyQt5==5.8.2
+pyqtgraph==0.10.0
+pytest==3.0.7
