@@ -10,9 +10,10 @@ The essential package components required to run the application are main.py plu
     $ python main.py
 
 The code should work for Python version 3.5 and up. The dependencies listed in requirements.txt are also required.
-If pip is installed, the following command should automatically install the required dependencies:
+If pip is installed, the following command should automatically install the required dependencies::
 
-    ``pip install -r requirements.txt``
+
+>>>pip install -r requirements.txt
 
 If you are familiar with virtual environments (e.g. using virtualenv, venv, or conda), you may wish to create one specifically for running this code, and install requirements there. If you use an Anaconda installation of Python, it is quite easy to set up and switch between different environments. See `the conda documentation`_ for details.
 
