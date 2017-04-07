@@ -30,8 +30,7 @@ Added
 
 * Specific versions for the dependencies in requirements.txt
 
-* Instructions on installing the software as stand-alone apps and as
-executable python code.
+* Instructions on installing the software as stand-alone apps and as executable python code.
 
 * Tox tests
 
@@ -42,8 +41,7 @@ Removed
 
 * setup.py -- this app should not be "pip installed" like a library.
 
-* mock.py no longer required for GUI testing. References to it removed from
-test_main.py.
+* mock.py no longer required for GUI testing. References to it removed from test_main.py.
 
 0.3.0 - 2017-04-04 (alpha)
 --------------------------
@@ -57,8 +55,7 @@ Added
 
 * Screenshots added to documentation and README.rst.
 
-* freezelog.txt is a diary of the steps that were required to get PyInstaller
- to work.
+* freezelog.txt is a diary of the steps that were required to get PyInstaller to work.
 
 Changed
 ^^^^^^^
