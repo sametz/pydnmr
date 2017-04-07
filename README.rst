@@ -1,4 +1,4 @@
-pyDNMR v0.3.0 (alpha)
+pyDNMR v0.4.0 (alpha)
 *********************
 
 .. image:: docs/source/pydnmrimg.png
@@ -25,9 +25,14 @@ Installation and Use
 ====================
 
 For Windows and Mac OS X, the application is frozen as a single-file,
-double-click-to-run application (see link above). Nothing besides the executable file needs to be installed.
+double-click-to-run application (see link above). Nothing besides the executable file needs to be installed. The description below is only for users that
+want to download and run the Python source code itself.
 
-If you want to run the program from the Python source code itself, at a minimum you will need main.py plus the pydnmr subfolder and its contents. The code should work for Python version 3.5 and up. The dependencies listed in requirements.txt are also required.
+The essential package components required to run the application are main.py plus the pydnmr subfolder and its contents. The application can be launched by running main.py: ::
+
+    $ python main.py
+
+The code should work for Python version 3.5 and up. The dependencies listed in requirements.txt are also required.
 If pip is installed, the following command should automatically install the required dependencies:
 
     ``pip install -r requirements.txt``

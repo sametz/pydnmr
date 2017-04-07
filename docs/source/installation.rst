@@ -1,15 +1,20 @@
 Installation and Use
 ====================
 
-This is a work in progress. The main application (main.py) and its dependencies in the pydnmr subfolder should provide a basic, functional application, if the user is running Python 3.3+ and has the requirements listed in requirements.txt.
+For Windows and Mac OS X, the application is frozen as a single-file,
+double-click-to-run application (see link above). Nothing besides the executable file needs to be installed. The description below is only for users that
+want to download and run the Python source code itself.
 
-.. Warning::
-
-    **Do not trust setup.py for installation** -- it has yet to be tested.
-
-The brave and curious can copy main.py plus the pydnmr/pydnmr subfolder and its contents, install the dependencies, and run the program from the command line ::
+The essential package components required to run the application are main.py plus the pydnmr subfolder and its contents. The application can be launched by running main.py: ::
 
     $ python main.py
 
-If you are using Python 2 and/or PyQt5 in your default Python environment, it is recommended that you use a virtualenv, set it up with Python 3 and PyQt5, and install into that.
+The code should work for Python version 3.5 and up. The dependencies listed in requirements.txt are also required.
+If pip is installed, the following command should automatically install the required dependencies:
+
+    ``pip install -r requirements.txt``
+
+If you are familiar with virtual environments (e.g. using virtualenv, venv, or conda), you may wish to create one specifically for running this code, and install requirements there. If you use an Anaconda installation of Python, it is quite easy to set up and switch between different environments. See `the conda documentation`_ for details.
+
+.. _the conda documentation: https://conda.io/docs/using/envs.html
 

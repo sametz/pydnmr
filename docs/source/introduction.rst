@@ -1,4 +1,4 @@
-Introduction to pyDNMR v0.3.0 (alpha)
+Introduction to pyDNMR v0.4.0 (alpha)
 =====================================
 
 
