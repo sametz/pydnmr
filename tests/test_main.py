@@ -3,13 +3,6 @@ import sys
 from PyQt5.QtWidgets import QApplication, QDoubleSpinBox, QLabel, \
     QGridLayout, QWidget
 
-# Test can be run on either the actual main.py app, or a mockup named mock.py.
-# Choose which to test:
-
-# Uncomment to test on mock:
-# import mock as main
-
-# Uncomment to test on real code:
 import main
 
 app = QApplication(sys.argv)
