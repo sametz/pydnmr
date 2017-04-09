@@ -7,8 +7,8 @@ import sys
 
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QStackedWidget,
                              QToolBar, QWidget, QLabel, QGridLayout,
-                             QGroupBox, QRadioButton, QDockWidget,
-                             QVBoxLayout, QListWidget)
+                             QGroupBox, QRadioButton, QDockWidget, QPushButton,
+                             QVBoxLayout, QListWidget, QButtonGroup)
 from PyQt5.QtCore import Qt
 
 
@@ -27,12 +27,14 @@ class dnmrGui(QMainWindow):
         self.setupCentral()
         #self.setupDock()
         self.setupButtonToolBar()
+        self.stackedWidget.setCurrentIndex(0)
+        
 
     def setupCentral(self):
 
-        stackedWidget = QStackedWidget()
-        stackedWidget.setObjectName('centralwidget')
-        self.setCentralWidget(stackedWidget)
+        self.stackedWidget = QStackedWidget()
+        self.stackedWidget.setObjectName('centralwidget')
+        self.setCentralWidget(self.stackedWidget)
 
         twosinglet = QWidget()
         twosinglet.setObjectName('twosinglet')
@@ -49,8 +51,8 @@ class dnmrGui(QMainWindow):
         twosinglet.setLayout(twosingletlayout)
         ab.setLayout(ablayout)
 
-        stackedWidget.addWidget(twosinglet)
-        stackedWidget.addWidget(ab)
+        self.stackedWidget.addWidget(twosinglet)
+        self.stackedWidget.addWidget(ab)
 
     def setupDock(self):
         leftdock = QDockWidget("leftdock", self)
@@ -76,13 +78,14 @@ class dnmrGui(QMainWindow):
 
         buttonbar = QToolBar()
         buttonbar.setObjectName('buttonbar')
-        buttonbar.addWidget(self.modelButtonGroup())
+        buttonbar.addWidget(self.modelButtonGroup2())
         self.addToolBar(buttonbar)
 
     def modelButtonGroup(self):
         buttonbox = QGroupBox("Model")
         twosingletbutton = QRadioButton('Two uncoupled spin-1/2 nuclei')
         twosingletbutton.setChecked(True)
+
         abbutton = QRadioButton('Two coupled spin-1/2 nuclei ("AB quartet)')
         buttonboxlayout = QVBoxLayout()
         buttonboxlayout.addWidget(twosingletbutton)
@@ -92,6 +95,92 @@ class dnmrGui(QMainWindow):
 
         return buttonbox
 
+    def modelButtonGroup2(self):
+        """
+        A widget of radio buttons that will determine which QStackedWidget is
+        displayed.
+        """
+
+        # It seems that in order for the buttonClicked signal to work,
+        # self.ButtonGroup and not ButtonGroup is necessary. Does not work
+        # with out 'self.' prefix!!!
+
+        ModelsWidget = QWidget()
+        ModelsLayout = QVBoxLayout()
+        self.ButtonGroup = QButtonGroup()
+
+        twosingletbutton = QRadioButton('Two uncoupled spin-1/2 nuclei')
+        twosingletbutton.setChecked(True)
+        self.ButtonGroup.addButton(twosingletbutton, 0)
+        abbutton = QRadioButton('Two coupled spin-1/2 nuclei ("AB quartet)')
+        self.ButtonGroup.addButton(abbutton, 1)
+        # buttonboxlayout = QVBoxLayout()
+
+
+        #print(ButtonGroup.button(0).text())
+        self.ButtonGroup.buttonClicked[int].connect(self.switchdisplay)
+        ModelsLayout.addWidget(twosingletbutton)
+        ModelsLayout.addWidget(abbutton)
+        ModelsWidget.setLayout(ModelsLayout)
+
+        return ModelsWidget
+
+    def modelButtonGroup3(self):
+
+        buttonwidget = QWidget()
+        layout = QVBoxLayout()
+
+        self.buttongroup = QButtonGroup()
+        #self.buttongroup.setExclusive(True)
+        self.buttongroup.buttonClicked[int].connect(self.on_button_clicked)
+
+        button = QRadioButton("Button 1")
+        self.buttongroup.addButton(button, 1)
+        layout.addWidget(button)
+        button.setChecked(True)
+
+        button = QRadioButton("Button 2")
+        self.buttongroup.addButton(button, 2)
+        layout.addWidget(button)
+
+        button = QRadioButton("Button 3")
+        self.buttongroup.addButton(button, 3)
+        layout.addWidget(button)
+
+        buttonwidget.setLayout(layout)
+
+        return buttonwidget
+
+    def modelButtonGroup4(self):
+
+        ModelsWidget = QWidget()
+        ModelsLayout = QVBoxLayout()
+        self.buttongroup = QButtonGroup()
+
+        twosingletbutton = QRadioButton('Two uncoupled spin-1/2 nuclei')
+        twosingletbutton.setChecked(True)
+        self.buttongroup.addButton(twosingletbutton, 0)
+        abbutton = QRadioButton('Two coupled spin-1/2 nuclei ("AB quartet)')
+        self.buttongroup.addButton(abbutton, 1)
+        # buttonboxlayout = QVBoxLayout()
+
+
+        #print(ButtonGroup.button(0).text())
+        self.buttongroup.buttonClicked[int].connect(self.on_button_clicked)
+        ModelsLayout.addWidget(twosingletbutton)
+        ModelsLayout.addWidget(abbutton)
+        ModelsWidget.setLayout(ModelsLayout)
+
+        return ModelsWidget
+
+    def on_button_clicked(self, buttonid):
+        print(buttonid)
+        button = self.buttongroup.button(buttonid)
+        print("%s was clicked!" % (button.text()))
+
+    def switchdisplay(self, id):
+        print('button %d has been pressed' % id)
+        self.stackedWidget.setCurrentIndex(id)
 
     def setupUiOld(self):
 
