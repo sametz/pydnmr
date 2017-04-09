@@ -3,7 +3,8 @@ import sys
 from PyQt5.QtWidgets import QApplication, QDoubleSpinBox, QLabel, \
     QGridLayout, QWidget
 
-import main
+#import main
+import ab as main
 
 app = QApplication(sys.argv)
 
@@ -150,6 +151,11 @@ class TestMainGUi:
                       'is of type', type(current_widget.parent()))
                 print('No more parents.')
                 end = True
+
+    def test_sidebar_exists(self):
+        """The user sees that there is a bar to the left of the main window.
+        """
+        assert 1 == 2  #finish the test!
 
     def teardown(self):
         pass
