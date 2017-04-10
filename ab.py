@@ -67,8 +67,7 @@ class dnmrGui(QMainWindow):
 
         super(dnmrGui, self).__init__(parent)
 
-        self.simulation_vars = {}  # stores kwargs that model is called with
-        print('creating plots')
+        #self.simulation_vars = {}  # stores kwargs that model is called with
         self.plots = []
         print('creating views list')
         self.views = []
@@ -95,7 +94,42 @@ class dnmrGui(QMainWindow):
         leftToolBar = QToolBar()
         leftToolBar.setObjectName('lefttoolbar')
         leftToolBar.addWidget(QLabel('Models!'))
+        leftToolBar.addWidget(self.modelButtonGroup())
         self.addToolBar(Qt.LeftToolBarArea, leftToolBar)
+
+    def modelButtonGroup(self):
+        """
+        A widget of radio buttons that will determine which QStackedWidget is
+        displayed.
+        """
+
+        # It seems that in order for the buttonClicked signal to work,
+        # self.ButtonGroup and not ButtonGroup is necessary. Does not work
+        # with out 'self.' prefix!!!
+
+        modelsWidget = QWidget()
+        modelsLayout = QVBoxLayout()
+        self.ButtonGroup = QButtonGroup()
+
+        twosingletbutton = QRadioButton('Two uncoupled spin-1/2 nuclei')
+        twosingletbutton.setChecked(True)
+        self.ButtonGroup.addButton(twosingletbutton, 0)
+
+        abbutton = QRadioButton('Two coupled spin-1/2 nuclei\n ("AB quartet)')
+        self.ButtonGroup.addButton(abbutton, 1)
+
+        self.ButtonGroup.buttonClicked[int].connect(self.switchView)
+
+        modelsLayout.addWidget(twosingletbutton)
+        modelsLayout.addWidget(abbutton)
+        modelsWidget.setLayout(modelsLayout)
+
+        return modelsWidget
+
+    def switchView(self, id):
+        print('button %d has been pressed' % id)
+        self.stackedWidget.setCurrentIndex(id)
+        self.call_model()
 
     def setupCentral(self):
 
@@ -154,14 +188,14 @@ class dnmrGui(QMainWindow):
 
             # noinspection PyUnresolvedReferences
             wbox.valueChanged.connect(
-                lambda val, key=widget.key: self.update(key, val))
+                lambda val, key=widget.key: self.updateView(key, val))
 
         print('dict is now:', twoSingletWidget.simulation_vars)
 
         setConfigOption('background', (43, 43, 43))
         setConfigOption('foreground', (187, 187, 187))
         graphicsView = PlotWidget()
-        self.plots.append(graphicsView)
+        self.plots.append(graphicsView.plot())
         twoSingletLayout.addWidget(graphicsView, 2, 0, 1, len(twospin_vars))
         # lets the graph span the entire width of the window, no matter how
         # many input widgets appear above
@@ -214,14 +248,14 @@ class dnmrGui(QMainWindow):
 
             # noinspection PyUnresolvedReferences
             wbox.valueChanged.connect(
-                lambda val, key=widget.key: self.update(key, val))
+                lambda val, key=widget.key: self.updateView(key, val))
 
         print('dict is now:', AB_Widget.simulation_vars)
 
         setConfigOption('background', (43, 43, 43))
         setConfigOption('foreground', (187, 187, 187))
         graphicsView = PlotWidget()
-        self.plots.append(graphicsView)
+        self.plots.append(graphicsView.plot())
         AB_Layout.addWidget(graphicsView, 2, 0, 1, len(twospin_vars))
         # lets the graph span the entire width of the window, no matter how
         # many input widgets appear above
@@ -234,11 +268,13 @@ class dnmrGui(QMainWindow):
     def initializeGui(self):
 
         # Initial view and plot determined by index in next 2 lines
-        self.stackedWidget.setCurrentIndex(1)
-        self.plotdata = self.plots[1].plot()
-        self.plotdata.getViewBox().invertX(True)  # Reverse x axis "NMR style"
-        self.plotdata.setData(*self.call_model())
+        for i in range(len(self.plots)):
+            self.stackedWidget.setCurrentIndex(i)
+            plot = self.plots[i]
+            plot.getViewBox().invertX(True)  # Reverse x axis "NMR style"
+            plot.setData(*self.call_model())
 
+        self.stackedWidget.setCurrentIndex(0)
         self.setGeometry(50, 50, 800, 600)
         self.setWindowTitle('pyDNMR')
         self.statusBar().showMessage('Ready')
@@ -258,7 +294,7 @@ class dnmrGui(QMainWindow):
 
     # TODO: this would override the builtin class function 'update'!
     # You probably want to rename this!
-    def update(self, key, val):
+    def updateView(self, key, val):
         """
         Detect a change in numerical input; record the change in
         the dictionary of widget values; call the model to get an updated
@@ -267,16 +303,21 @@ class dnmrGui(QMainWindow):
         signalling widget
         :param val: the current value of the signalling widget
         """
-        self.simulation_vars[key] = val
+        #self.simulation_vars[key] = val
         self.stackedWidget.currentWidget().simulation_vars[key] = val
+        self.plot_graph()
 
-        # Choose one of the following. TODO: speedtests to find fastest routine
-        self.plotdata.setData(*self.call_model())  # original routine
+        # plot = self.plots[self.stackedWidget.currentIndex()]
+        # plot.setData(*self.call_model())  # original routine
 
         # OR:
 
         # spectrum = TwoSinglets(**self.simulation_vars).spectrum()
         # self.plotdata.setData(*spectrum)  # using new TwoSinglets class
+
+    def plot_graph(self):
+        activePlot = self.plots[self.stackedWidget.currentIndex()]
+        activePlot.setData(*self.call_model())
 
 
 if __name__ == '__main__':
