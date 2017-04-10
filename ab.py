@@ -6,11 +6,12 @@ import sys
 from collections import namedtuple
 
 from PyQt5.QtWidgets import (QWidget, QGridLayout, QLabel, QDoubleSpinBox,
-                             QApplication, QMainWindow)
+                             QToolBar, QRadioButton, QVBoxLayout, QButtonGroup,
+                             QStackedWidget, QApplication, QMainWindow)
 from PyQt5.QtCore import Qt
 from pyqtgraph import PlotWidget, setConfigOption
 
-from pydnmr.dnmrplot import dnmrplot_2spin
+from pydnmr.dnmrplot import dnmrplot_2spin, dnmrplot_AB
 
 # Define the different types of input widgets that may be required.
 # Currently all inputs are QDoubleSpinBox.
@@ -35,10 +36,19 @@ wb = var(key='wb', string='W<sub>B</sub>', value=0.50,
 percent_a = var(key='percent_a', string='% A', value=50.00,
                 range=(0.00, 100.00))
 
-# Each type of calculation will have its own ordering of input widgets:
+# Each type of calculation will have its own ordering of input widgets.
+# Using order and preset values of WINDNMR default.
 twospin_vars = (va, vb, k, wa, wb, percent_a)
 
-# further widget collections woudl appear hear for future calculation models
+j_ab = var(key='j_ab', string='J<sub>AB</sub>', value=12,
+           range=(0.00, 100.00))
+k_ab = var(key='k_ab', string='k<sub>AB</sub>', value=12,
+           range=(0.01, 1000.00))
+ab_vars = (va, vb, j_ab, k_ab, wa)
+
+#
+
+# further widget collections woudl appear hear for future calculation views
 
 
 class dnmrGui(QMainWindow):
@@ -46,17 +56,23 @@ class dnmrGui(QMainWindow):
     Create the GUI for the application.
 
     Currently the app features a single simulation model (two uncoupled
-    spins), and so a single main window. TODO: as models are added, create a
+    spins), and so a single main window. TODO: as views are added, create a
     toggle between GUI windows tailored to each simulation (e.g. appropriate
     widgets for data entry)
     """
 
     def __init__(self, parent=None):
 
+        print('ititializing gui class')
+
         super(dnmrGui, self).__init__(parent)
 
         self.simulation_vars = {}  # stores kwargs that model is called with
-
+        print('creating plots')
+        self.plots = []
+        print('creating views list')
+        self.views = []
+        self.models = [dnmrplot_2spin, dnmrplot_AB]
         self.setObjectName('toplevel')
         self.setupUi()
 
@@ -67,13 +83,42 @@ class dnmrGui(QMainWindow):
         and simulated lineshape.
         """
 
-        centralWidget = QWidget()
-        centralWidget.setAutoFillBackground(True)
-        centralWidget.setStyleSheet("background-color: rgb(60, 63, 65);")
-        centralWidget.setObjectName('centralwidget')
-        self.setCentralWidget(centralWidget)
+        self.setupCentral()
+        self.setupModelBar()
+        self.initializeGui()
 
-        centralLayout = QGridLayout()
+    def setupModelBar(self):
+        """
+        Add a tool bar to the GUI for selecting which model to display 
+        """
+
+        leftToolBar = QToolBar()
+        leftToolBar.setObjectName('lefttoolbar')
+        leftToolBar.addWidget(QLabel('Models!'))
+        self.addToolBar(Qt.LeftToolBarArea, leftToolBar)
+
+    def setupCentral(self):
+
+        self.stackedWidget = QStackedWidget()
+        self.createViews()
+        for view in self.views:
+            self.stackedWidget.addWidget(view)
+        self.setCentralWidget(self.stackedWidget)
+
+    def createViews(self):
+        self.views.append(self.twoSingletView())
+        self.views.append(self.ABView())
+
+    def twoSingletView(self):
+
+        twoSingletWidget = QWidget()
+        twoSingletWidget.setObjectName('twosingletwidget')
+        twoSingletWidget.setAutoFillBackground(True)
+        twoSingletWidget.setStyleSheet("background-color: rgb(60, 63, 65);")
+
+        twoSingletWidget.simulation_vars = {}
+
+        twoSingletLayout = QGridLayout()
         # More complex layouts can be considered in future, e.g. a horizontal
         #  layout containing a serious of vertical layouts containing labels
         # and spinboxes.
@@ -94,10 +139,12 @@ class dnmrGui(QMainWindow):
             wbox.setAccelerated(True)
 
             # populate the dictionary with initial simulation variables
-            self.simulation_vars[widget.key] = widget.value
+            #self.simulation_vars[widget.key] = widget.value
+            twoSingletWidget.simulation_vars[widget.key] = widget.value
+            print(widget.string, ' added to dict')
 
-            centralLayout.addWidget(wlabel, 0, i)
-            centralLayout.addWidget(wbox, 1, i)
+            twoSingletLayout.addWidget(wlabel, 0, i)
+            twoSingletLayout.addWidget(wbox, 1, i)
 
             # Using the lambda expression below allows extra information to
             # be passed to the self.update slot, allowing the delegator to
@@ -109,17 +156,86 @@ class dnmrGui(QMainWindow):
             wbox.valueChanged.connect(
                 lambda val, key=widget.key: self.update(key, val))
 
+        print('dict is now:', twoSingletWidget.simulation_vars)
+
         setConfigOption('background', (43, 43, 43))
         setConfigOption('foreground', (187, 187, 187))
         graphicsView = PlotWidget()
-        centralLayout.addWidget(graphicsView, 2, 0, 1, len(twospin_vars))
+        self.plots.append(graphicsView)
+        twoSingletLayout.addWidget(graphicsView, 2, 0, 1, len(twospin_vars))
         # lets the graph span the entire width of the window, no matter how
         # many input widgets appear above
 
-        centralWidget.setLayout(centralLayout)
-        centralWidget.layout().setObjectName('centrallayout')
+        twoSingletWidget.setLayout(twoSingletLayout)
+        twoSingletWidget.layout().setObjectName('twosingletlayout')
 
-        self.plotdata = graphicsView.plot()
+        return twoSingletWidget
+
+    def ABView(self):
+
+        AB_Widget = QWidget()
+        AB_Widget.setAutoFillBackground(True)
+        AB_Widget.setStyleSheet("background-color: rgb(60, 63, 65);")
+        AB_Widget.setObjectName('ABwidget')
+
+        AB_Widget.simulation_vars = {}
+
+        AB_Layout = QGridLayout()
+        # More complex layouts can be considered in future, e.g. a horizontal
+        #  layout containing a serious of vertical layouts containing labels
+        # and spinboxes.
+
+        for i, widget in enumerate(ab_vars):
+            # The namedtuple construct facilitates widget generation:
+            wlabel = QLabel(widget.string)
+            wlabel.setObjectName(widget.key + '_label')
+            wlabel.setStyleSheet('color: white')
+            wlabel.setAlignment(Qt.AlignCenter)
+
+            wbox = QDoubleSpinBox()
+            wbox.setObjectName(widget.key)
+            wbox.setStyleSheet('color: white')
+            wbox.setRange(*widget.range)  # SET RANGE BEFORE VALUE
+            wbox.setValue(widget.value)
+            wbox.setAlignment(Qt.AlignCenter)
+            wbox.setAccelerated(True)
+
+            # populate the dictionary with initial simulation variables
+            AB_Widget.simulation_vars[widget.key] = widget.value
+            print(widget.string, ' added to dict')
+            AB_Layout.addWidget(wlabel, 0, i)
+            AB_Layout.addWidget(wbox, 1, i)
+
+            # Using the lambda expression below allows extra information to
+            # be passed to the self.update slot, allowing the delegator to
+            # see who sent the signal, update the dictionary of model inputs,
+            # call the model for a simulation result, and plot it. See:
+            # https://mfitzp.io/article/transmit-extra-data-with-signals-in-pyqt/
+
+            # noinspection PyUnresolvedReferences
+            wbox.valueChanged.connect(
+                lambda val, key=widget.key: self.update(key, val))
+
+        print('dict is now:', AB_Widget.simulation_vars)
+
+        setConfigOption('background', (43, 43, 43))
+        setConfigOption('foreground', (187, 187, 187))
+        graphicsView = PlotWidget()
+        self.plots.append(graphicsView)
+        AB_Layout.addWidget(graphicsView, 2, 0, 1, len(twospin_vars))
+        # lets the graph span the entire width of the window, no matter how
+        # many input widgets appear above
+
+        AB_Widget.setLayout(AB_Layout)
+        AB_Widget.layout().setObjectName('ABlayout')
+
+        return AB_Widget
+
+    def initializeGui(self):
+
+        # Initial view and plot determined by index in next 2 lines
+        self.stackedWidget.setCurrentIndex(1)
+        self.plotdata = self.plots[1].plot()
         self.plotdata.getViewBox().invertX(True)  # Reverse x axis "NMR style"
         self.plotdata.setData(*self.call_model())
 
@@ -132,7 +248,12 @@ class dnmrGui(QMainWindow):
         Send the dictionary as **kwargs to the model
         :return: a spectrum, consisting of a tuple of x and y coordinate arrays
         """
-        x, y = dnmrplot_2spin(**self.simulation_vars)
+        #x, y = dnmrplot_2spin(**self.simulation_vars)
+        # x, y = dnmrplot_2spin(
+        #     **self.stackedWidget.currentWidget().simulation_vars)
+        model = self.models[self.stackedWidget.currentIndex()]
+        x, y = model(
+            **self.stackedWidget.currentWidget().simulation_vars)
         return x, y
 
     # TODO: this would override the builtin class function 'update'!
@@ -147,6 +268,7 @@ class dnmrGui(QMainWindow):
         :param val: the current value of the signalling widget
         """
         self.simulation_vars[key] = val
+        self.stackedWidget.currentWidget().simulation_vars[key] = val
 
         # Choose one of the following. TODO: speedtests to find fastest routine
         self.plotdata.setData(*self.call_model())  # original routine

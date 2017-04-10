@@ -46,16 +46,16 @@ def dnmrplot_2spin(va, vb, k, wa, wb, percent_a):
     return x, y
 
 
-def dnmrplot_AB(v1, v2, J, k, w):
+def dnmrplot_AB(va, vb, j_ab, k_ab, wa):
     """
     plots the function nmrmath.dnmr_AB.
     Currently assumes va > vb
     """
 
-    l_limit = v2 - 50
-    r_limit = v1 + 50
+    l_limit = vb - 50
+    r_limit = va + 50
     x = np.linspace(l_limit, r_limit, 800)
-    y = dnmr_AB(x, v1, v2, J, k, w)
+    y = dnmr_AB(x, va, vb, j_ab, k_ab, wa)
     return x, y
 
 
