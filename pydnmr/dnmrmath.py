@@ -60,7 +60,7 @@ class TwoSinglets:
         :return: a frequency-dependent function that returns the intensity of
         the spectrum at frequency v
         """
-
+        # TODO: add to docstring
         p = self.p
         Dv = self.Dv
         P = self.P
@@ -154,9 +154,8 @@ def d2s_func(va, vb, ka, wa, wb, pa):
     and returns intensity (y).
     """
 
-    # Simulation seems correct even when va < vb.
-    # TODO: verify that this doesn't matter (apart from dnmrplot left/right
-    # limits) and doesn't need a check somewhere in the code.
+    # TODO: factor pis out; redo comments to explain excision of v-independent
+    # terms
 
     pi = np.pi
     pi_squared = pi ** 2
@@ -176,8 +175,9 @@ def d2s_func(va, vb, ka, wa, wb, pa):
         """
         Scheduled for refactoring.
         :param v: frequency
-        :return: function that calculates intensity
+        :return: function that calculates the intensity at v
         """
+        # TODO: fix docstring, explain _P _Q etc correlate to P, Q etc in lit.
         # FIXED: previous version of this function used
         # nonlocal Dv, P, Q, R
         # but apparently when function called repeatedly these values would
