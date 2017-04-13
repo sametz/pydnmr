@@ -1,7 +1,8 @@
 import sys
 
 from PyQt5.QtWidgets import (QApplication, QDoubleSpinBox, QLabel, QGridLayout,
-                             QWidget, QToolBar, QStackedWidget, QVBoxLayout)
+                             QWidget, QToolBar, QStackedWidget, QVBoxLayout,
+                             QRadioButton, QSpacerItem)
 from PyQt5.QtCore import Qt
 
 #import main
@@ -49,7 +50,7 @@ class TestDefaultGUi:
 
     def test_two_singlet_all_widgets_exist(self):
         """The user sees 5 labels and 5 'double spin box' numerical entries 
-        corresponding to the 5 inputs needed for the simulation.
+        corresponding to the 5 inputs needed for the two singlets simulation.
         """
 
         for required_widget in main.twospin_vars:
@@ -194,29 +195,82 @@ class TestViewSwitch:
         """
         assert self.ui.toolBarArea(self.getToolbar) == Qt.LeftToolBarArea
 
+    def test_left_toolbar_has_layout(self):
+        """The user sees that the toolbar has a vertical layout."""
+        assert self.getToolbar.findChild(QVBoxLayout, 'modelslayout')
+
     def test_find_model_selection(self):
-        """The user sees a menu of radio buttons with a heading saying 
+        """The user sees a menu of radio buttons with a label saying 
         'Select Model:'
         """
 
         foundModelsWidget = self.getToolbar.findChild(QWidget, 'modelswidget')
-        #assert foundModelsWidget.layout.itemAt(0).widget()
+        for child in foundModelsWidget.children():
+            print(type(child))
+            if isinstance(child, QLabel):
+                print('QLabel', child.text())
+                assert child.text() == 'Select Model:'
+            elif isinstance(child, QRadioButton):
+                print('QRadioButton', child.text())
+            else:
+                print('Also found widget of type: ', type(child))
+
+    def test_toolbar_layout(self):
+        """The user sees, centered vertically in the toolbar, a label 
+        instructing them to select a model, followed by a radio button to 
+        select the two singlet model followed by a radio button to select the 
+        AB model.
+        """
+        layout = self.getToolbar.findChild(QVBoxLayout, 'modelslayout')
+        assert layout.count() == 5
+        assert (isinstance(layout.itemAt(0), QSpacerItem) and
+                (isinstance(layout.itemAt(4), QSpacerItem)))
+        assert layout.itemAt(1).widget().text() == 'Select Model:'
+        assert layout.itemAt(2).widget().text() == \
+               'Two uncoupled spin-1/2 nuclei'
+        assert layout.itemAt(3).widget().text() == \
+               'Two coupled spin-1/2 nuclei\n ("AB quartet)'
+
+    def test_view_switch(self):
+        """The user clicks on the radio button for the AB model, and sees that 
+        the view has changed to that for the AB model.
+        """
+        initialView = self.ui.stackedWidget.currentWidget()
+        abButton = self.getToolbar.findChild(QRadioButton, 'abbutton')
+        abButton.click()
+        finalView = self.ui.stackedWidget.currentWidget()
+        assert initialView is not finalView
+        assert finalView.objectName() == 'ABwidget'
+
+    # function below was used for debugging, and retained because it may detect
+    # a drastic change in GUI structure
+    def test_child_parent_map(self):
         foundModelsLayout = self.getToolbar.findChild(QVBoxLayout,
-                                                     'modelslayout')
-        assert foundModelsWidget.layout == foundModelsLayout
+                                                      'modelslayout')
+        current_widget = foundModelsLayout
+        end = False
+        while not end:
+            try:
+                print('Widget ', current_widget.objectName(), ' has parent ',
+                      current_widget.parent().objectName())
+                current_widget = current_widget.parent()
+            except Exception:
+                print('The parent of', current_widget.objectName(),
+                      'is of type', type(current_widget.parent()))
+                print('No more parents.')
+                end = True
+
 
 class TestABGUi:
 
     def setup(self):
         self.ui = main.DnmrGui()
+        self.ui.stackedWidget.setCurrentIndex(1)  # set view to AB model
 
-        self.boxlist = [widget.key for widget in main.twospin_vars]
+        self.boxlist = [widget.key for widget in main.ab_vars]
         labellist = [box + '_label' for box in self.boxlist]
         widgetlist = self.boxlist + labellist
 
-        # findChild can use tuples of object types, but my first pass at
-        # using it failed (returned 4 copies of wb and 4 copies of k).
-        # assembling piecewise:
         boxdict = {widget: self.ui.findChild(QDoubleSpinBox, widget)
                    for widget in self.boxlist}
         labeldict = {widget: self.ui.findChild(QLabel, widget)
@@ -229,14 +283,12 @@ class TestABGUi:
         print('widget list:', widgetlist)
         print('widget dict:', self.widgetdict)
 
-    def test_title(self):
-        """The user launches the app and sees that it is named 'pyDNMR'"""
-        app_title = self.ui.windowTitle()
-        assert app_title == 'pyDNMR'
+    def test_starting_with_ab_view(self):
+        assert self.ui.stackedWidget.currentWidget().objectName() == 'ABwidget'
 
-    def test_two_singlet_all_widgets_exist(self):
+    def test_ab_all_widgets_exist(self):
         """The user sees 5 labels and 5 'double spin box' numerical entries 
-        corresponding to the 5 inputs needed for the simulation.
+        corresponding to the 5 inputs needed for the AB simulation.
         """
 
         for widget in main.twospin_vars:
@@ -251,13 +303,13 @@ class TestABGUi:
         The labels have the correct text, and the numerical entries are 
         correct for the default system.
         """
-        layout = self.ui.findChild(QGridLayout, 'centrallayout')
-        widgetlist = main.twospin_vars
+        layout = self.ui.findChild(QGridLayout, 'ABlayout')
+        widgetlist = main.ab_vars
         for i, widget in enumerate(widgetlist):
-            label_fetch = layout.itemAtPosition(0, i).widget()
-            box_fetch = layout.itemAtPosition(1, i).widget()
-            assert label_fetch.text() == widget.string
-            assert box_fetch.value() == widget.value
+            widgetLabel = layout.itemAtPosition(0, i).widget()
+            widgetBox = layout.itemAtPosition(1, i).widget()
+            assert widgetLabel.text() == widget.string
+            assert widgetBox.value() == widget.value
 
     def test_graph_spans_bottom_of_frame(self):
         """The user sees a graph object below the entry widgets, filling the 
@@ -266,7 +318,7 @@ class TestABGUi:
         # TODO: learn how to assert a widget is a certain class
         # Test doesnt' test for correct graph widget, just contents
 
-        layout = self.ui.findChild(QGridLayout, 'centrallayout')
+        layout = self.ui.findChild(QGridLayout, 'ABlayout')
         widget_2_0 = layout.itemAtPosition(2, 0).widget()
         data = widget_2_0.listDataItems()
 
@@ -300,60 +352,23 @@ class TestABGUi:
 
         for key in self.boxlist:
             widget = self.widgetdict[key]
-            widget.setValue(widget.value() + 10)
-            widget.setValue(widget.value() - 20)
-            widget.setValue(widget.value() + 10)
 
-        for widget in main.twospin_vars:
-            if widget.value > 10:
-                assert self.widgetdict[widget.key].value() == widget.value
+            # success of test depends on WINDNMR's default values used,
+            # i.e. test that j_ab, k_ab and wa + 20 - 40 don't go below 0
+            widget.setValue(widget.value() + 20)
+            widget.setValue(widget.value() - 40)
+            widget.setValue(widget.value() + 20)
+
+        for widget in main.ab_vars:
+            print(widget.value, 'vs. ', self.widgetdict[widget.key].value())
+            if widget.key == 'k_ab' or widget.key == 'wa':
+                assert self.widgetdict[widget.key].value() == 20.01
+                # k and wa widgets should not go below 0.01
+            elif widget.key == 'j_ab':
+                assert self.widgetdict[widget.key].value() == 20.00
+                # j_ab should not go below 0
             else:
-                assert self.widgetdict[widget.key].value() == 10.01
-                # k and wa/b widgets should not go below 0.01
-
-    # tests below were used as part of debugging, but retained because they
-    # may detect a drastic change to the GUI
-
-    def test_find_central_widget(self):
-        found_centralwidget = self.ui.findChild(QWidget, 'centralwidget')
-        print('Found centralwidget with parent', found_centralwidget.parent(),
-              found_centralwidget.parent().objectName())
-
-    def test_find_central_layout(self):
-
-        found_layout = self.ui.findChild(QGridLayout, 'centrallayout')
-        if found_layout:
-            print('Found layout named', found_layout.objectName())
-            print('Found layout has parent:', found_layout.parent(),
-                  found_layout.parent().objectName())
-        else:
-            found_layout = self.ui.centralWidget().layout()
-            print('Did not find QGridLayout child named "centrallayout"')
-            print('Found layout named', found_layout.objectName())
-            print('Found layout has parent:', found_layout.parent(),
-                  found_layout.parent().objectName())
-
-    def test_child_parent_map(self):
-        va_widget_fetch = self.ui.findChild(QDoubleSpinBox, 'va')
-        current_widget = va_widget_fetch
-        end = False
-        while not end:
-            try:
-                print('Widget ', current_widget.objectName(), ' has parent ',
-                      current_widget.parent().objectName())
-                current_widget = current_widget.parent()
-            except Exception:
-                print('The parent of', current_widget.objectName(),
-                      'is of type', type(current_widget.parent()))
-                print('No more parents.')
-                end = True
-
-    def test_sidebar_exists(self):
-        """The user sees that there is a toolbar to the left of the main window.
-        """
-
-
-        assert 1 == 2  #finish the test!
+                assert self.widgetdict[widget.key].value() == widget.value
 
     def teardown(self):
         pass

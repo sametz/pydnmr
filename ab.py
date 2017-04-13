@@ -46,9 +46,9 @@ percent_a = var(key='percent_a', string='% A', value=50.00,
 twospin_vars = (va, vb, k, wa, wb, percent_a)
 
 # Widgets for the two coupled spins (AB system) view:
-j_ab = var(key='j_ab', string='J<sub>AB</sub>', value=12,
+j_ab = var(key='j_ab', string='J<sub>AB</sub>', value=12.00,
            range=(0.00, 100.00))
-k_ab = var(key='k_ab', string='k<sub>AB</sub>', value=12,
+k_ab = var(key='k_ab', string='k<sub>AB</sub>', value=12.00,
            range=(0.01, 1000.00))
 ab_vars = (va, vb, j_ab, k_ab, wa)
 
@@ -128,11 +128,13 @@ class DnmrGui(QMainWindow):
         selectModelLabel.setStyleSheet('color: white')
 
         twosingletbutton = QRadioButton('Two uncoupled spin-1/2 nuclei')
+        twosingletbutton.setObjectName('twosingletbutton')
         twosingletbutton.setStyleSheet('color: white')
         twosingletbutton.setChecked(True)
         self.ButtonGroup.addButton(twosingletbutton, 0)
 
         abbutton = QRadioButton('Two coupled spin-1/2 nuclei\n ("AB quartet)')
+        abbutton.setObjectName('abbutton')
         abbutton.setStyleSheet('color: white')
         self.ButtonGroup.addButton(abbutton, 1)
 
