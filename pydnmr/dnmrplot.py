@@ -14,7 +14,7 @@ def dnmrplot_2spin(va, vb, k, wa, wb, percent_a):
     """
     Creates the spectrum data using the function nmrmath.d2s_func.
     :param va: The frequency of nucleus 'a' at the slow exchange limit
-    :param vb: The frequency of nucleus 'a' at the slow exchange limit
+    :param vb: The frequency of nucleus 'b' at the slow exchange limit
     :param k: The rate of nuclear exchange
     :param wa: The width at half heigh of the signal for nucleus a (at the slow
     exchange limit).
@@ -48,9 +48,19 @@ def dnmrplot_2spin(va, vb, k, wa, wb, percent_a):
 
 def dnmrplot_AB(va, vb, j_ab, k_ab, wa):
     """
-    plots the function nmrmath.dnmr_AB.
-    Currently assumes va > vb
+    Creates the spectrum data using the function nmrmath.dnmr_AB.
+    :param va: The frequency of nucleus 'a' at the slow exchange limit
+    :param vb: The frequency of nucleus 'b' at the slow exchange limit
+    :param j_ab: The coupling constant between nuclei a and b
+    :param k_ab: The rate of two-site exchange of nuclei a and b
+    :param wa: The line width at the slow exchange limit
+    :return: a tuple of numpy arrays for frequencies (x coordinate) and 
+    corresponding intensities (y coordinate). Hard-coded for 800 data points 
+    and a frequency range from vb-50 to va+50.
     """
+
+    if vb > va:
+        va, vb = vb, va  # dnmr_AB requires va > vb
 
     l_limit = vb - 50
     r_limit = va + 50
