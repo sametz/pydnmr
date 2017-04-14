@@ -43,7 +43,7 @@ percent_a = var(key='percent_a', string='% A', value=50.00,
                 range=(0.00, 100.00))
 
 
-twospin_vars = (va, vb, k, wa, wb, percent_a)
+twosinglets_vars = (va, vb, k, wa, wb, percent_a)
 
 # Widgets for the two coupled spins (AB system) view:
 j_ab = var(key='j_ab', string='J<sub>AB</sub>', value=12.00,
@@ -52,12 +52,8 @@ k_ab = var(key='k_ab', string='k<sub>AB</sub>', value=12.00,
            range=(0.01, 1000.00))
 ab_vars = (va, vb, j_ab, k_ab, wa)
 
-# TODO: if it becomes important to have unique widget names across views,
-# for functional testing of GUI, will need to refactor and not re-use
-# twospin_vars widgets in ab_vars
-#
-
-# further widget collections woudl appear hear for future calculation views
+mainviews = (('twosinglets', twosinglets_vars), ('ab', ab_vars))
+plots = []
 
 
 class DnmrGui(QMainWindow):
@@ -77,14 +73,77 @@ class DnmrGui(QMainWindow):
         super(DnmrGui, self).__init__(parent)
 
         #self.simulation_vars = {}  # stores kwargs that model is called with
-        self.plots = []
+        #self.plots = []
         print('creating views list')
         self.views = []
         self.models = [dnmrplot_2spin, dnmrplot_AB]
         self.setObjectName('toplevel')
         self.setupUi()
 
-    # TODO: determine why it's common to separate the following from __init__
+    class MainView(QWidget):
+        """A QWidget that has the following properties:
+        - A top row of labeled QDoubleSpinBox es for data entry
+        - Beneath them, a pqtgraph PlotWidget for the simulated plot
+        - the ability to detect changes to the data entries, store their 
+        current values, call the appropriate model and pass the simulation 
+        results to the pyqtgraph widget
+        """
+        def __init__(self, name, *args):
+            super().__init__()
+            self.setObjectName(name + 'widget')
+            self.setAutoFillBackground(True)
+            self.setStyleSheet("background-color: rgb(60, 63, 65);")
+
+            self.simulation_vars = {}
+
+            layout = QGridLayout()
+            layout.setObjectName(name + 'layout')
+
+            for i, widget in enumerate(args):
+                # make a label for the widget
+                wlabel = QLabel(widget.string)
+                wlabel.setObjectName(widget.key + '_label')
+                wlabel.setStyleSheet('color: white')
+                wlabel.setAlignment(Qt.AlignCenter)
+
+                # Make a QDoubleSpinBox widget
+                wbox = QDoubleSpinBox()
+                wbox.setObjectName(widget.key)
+                wbox.setStyleSheet('color: white')
+                wbox.setRange(*widget.range)  # SET RANGE BEFORE VALUE
+                wbox.setValue(widget.value)
+                wbox.setAlignment(Qt.AlignCenter)
+                wbox.setAccelerated(True)
+
+                # Add label (above) and spinbox (below) to layout
+                layout.addWidget(wlabel, 0, i)
+                layout.addWidget(wbox, 1, i)
+
+                # Store the default simulation value
+                self.simulation_vars[widget.key] = widget.value
+
+                # update the view if this widget's value is changed
+                wbox.valueChanged.connect(
+                    lambda val, key=widget.key: self.parent().parent()
+                        .updateView(key, val))
+
+            # Add pyqtgraph widget
+            setConfigOption('background', (43, 43, 43))
+            setConfigOption('foreground', (187, 187, 187))
+            graphicsView = PlotWidget()
+
+            layout.addWidget(graphicsView, 2, 0, 1, len(twosinglets_vars))
+            plots.append(graphicsView.plot())
+            # lets the graph span the entire width of the window, no matter how
+            # many input widgets appear above
+
+            # TODO: This looks to be wrong! second line smells off
+            self.setLayout(layout)
+            #self.layout().setObjectName('twosingletlayout')
+            #print('twosinglet layout name is:', twoSingletLayout.objectName())
+            #print('about to return twosingletwidget; name is: ',
+                  #twoSingletWidget.objectName())
+
     def setupUi(self):
         """
         Set up the GUI with the default moded, default variables,
@@ -159,9 +218,13 @@ class DnmrGui(QMainWindow):
 
         self.stackedWidget = QStackedWidget()
         self.stackedWidget.setObjectName('stackedwidget')
-        self.createViews()
-        for view in self.views:
-            self.stackedWidget.addWidget(view)
+        # self.createViews()
+        # for view in views:
+        #     self.stackedWidget.addWidget(view)
+        # self.setCentralWidget(self.stackedWidget)
+        for view in mainviews:
+            widget = self.MainView(view[0], *view[1])
+            self.stackedWidget.addWidget(widget)
         self.setCentralWidget(self.stackedWidget)
 
     def createViews(self):
@@ -183,7 +246,7 @@ class DnmrGui(QMainWindow):
         #  layout containing a serious of vertical layouts containing labels
         # and spinboxes.
 
-        for i, widget in enumerate(twospin_vars):
+        for i, widget in enumerate(twosinglets_vars):
             # The namedtuple construct facilitates widget generation:
             wlabel = QLabel(widget.string)
             wlabel.setObjectName(widget.key + '_label')
@@ -222,7 +285,7 @@ class DnmrGui(QMainWindow):
         setConfigOption('foreground', (187, 187, 187))
         graphicsView = PlotWidget()
         self.plots.append(graphicsView.plot())
-        twoSingletLayout.addWidget(graphicsView, 2, 0, 1, len(twospin_vars))
+        twoSingletLayout.addWidget(graphicsView, 2, 0, 1, len(twosinglets_vars))
         # lets the graph span the entire width of the window, no matter how
         # many input widgets appear above
 
@@ -286,7 +349,7 @@ class DnmrGui(QMainWindow):
         setConfigOption('foreground', (187, 187, 187))
         graphicsView = PlotWidget()
         self.plots.append(graphicsView.plot())
-        AB_Layout.addWidget(graphicsView, 2, 0, 1, len(twospin_vars))
+        AB_Layout.addWidget(graphicsView, 2, 0, 1, len(twosinglets_vars))
         # lets the graph span the entire width of the window, no matter how
         # many input widgets appear above
 
@@ -299,9 +362,9 @@ class DnmrGui(QMainWindow):
     def initializeGui(self):
 
         # Initial view and plot determined by index in next 2 lines
-        for i in range(len(self.plots)):
+        for i in range(len(plots)):
             self.stackedWidget.setCurrentIndex(i)
-            plot = self.plots[i]
+            plot = plots[i]
             plot.getViewBox().invertX(True)  # Reverse x axis "NMR style"
             plot.setData(*self.call_model())
 
@@ -347,7 +410,7 @@ class DnmrGui(QMainWindow):
         # self.plotdata.setData(*spectrum)  # using new TwoSinglets class
 
     def plot_graph(self):
-        activePlot = self.plots[self.stackedWidget.currentIndex()]
+        activePlot = plots[self.stackedWidget.currentIndex()]
         activePlot.setData(*self.call_model())
 
 

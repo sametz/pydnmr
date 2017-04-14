@@ -18,7 +18,7 @@ class TestDefaultGUi:
 
         self.activeView = self.ui.stackedWidget.currentWidget()
         # create lists of names for required widgets
-        self.doublespinboxlist = [widget.key for widget in main.twospin_vars]
+        self.doublespinboxlist = [widget.key for widget in main.twosinglets_vars]
         labellist = [box + '_label' for box in self.doublespinboxlist]
         widgetlist = self.doublespinboxlist + labellist
 
@@ -46,14 +46,14 @@ class TestDefaultGUi:
     def test_find_active_view(self):
         """The user sees that the default main window is designed for the 
         simulation of two singlets."""
-        assert self.activeView.objectName() == 'twosingletwidget'
+        assert self.activeView.objectName() == 'twosingletswidget'
 
-    def test_two_singlet_all_widgets_exist(self):
+    def test_two_singlets_all_widgets_exist(self):
         """The user sees 5 labels and 5 'double spin box' numerical entries 
         corresponding to the 5 inputs needed for the two singlets simulation.
         """
 
-        for required_widget in main.twospin_vars:
+        for required_widget in main.twosinglets_vars:
             widgetBox = self.activeView.findChild(QDoubleSpinBox,
                                                   required_widget.key)
             assert widgetBox.value() == required_widget.value
@@ -61,14 +61,14 @@ class TestDefaultGUi:
                 QLabel, required_widget.key + '_label')
             assert widgetLabel.text() == required_widget.string
 
-    def test_two_singlet_grid_layout(self):
+    def test_two_singlets_grid_layout(self):
         """The user sees that the widgets are in a 2 x 5 grid of 
         numerical entries (bottom row) with corresponding labels (top row). 
         The labels have the correct text, and the numerical entries are 
         correct for the default system.
         """
-        layout = self.ui.findChild(QGridLayout, 'twosingletlayout')
-        widgetlist = main.twospin_vars
+        layout = self.ui.findChild(QGridLayout, 'twosingletslayout')
+        widgetlist = main.twosinglets_vars
         for i, widget in enumerate(widgetlist):
             widgetLabel = layout.itemAtPosition(0, i).widget()
             widgetBox = layout.itemAtPosition(1, i).widget()
@@ -83,7 +83,7 @@ class TestDefaultGUi:
         # TODO: split into multiple tests
         # Test doesnt' test for correct graph widget, just contents
 
-        layout = self.ui.findChild(QGridLayout, 'twosingletlayout')
+        layout = self.ui.findChild(QGridLayout, 'twosingletslayout')
         widget_2_0 = layout.itemAtPosition(2, 0).widget()
         data = widget_2_0.listDataItems()
 
@@ -121,7 +121,7 @@ class TestDefaultGUi:
             widget.setValue(widget.value() - 20)
             widget.setValue(widget.value() + 10)
 
-        for widget in main.twospin_vars:
+        for widget in main.twosinglets_vars:
             if widget.value > 10:
                 assert self.widgetdict[widget.key].value() == widget.value
             else:
@@ -137,16 +137,16 @@ class TestDefaultGUi:
               foundStackedWidget.parent(),
               foundStackedWidget.parent().objectName())
 
-    def test_find_two_singlet_widget(self):
-        foundTwoSingletWidget = self.ui.findChild(QWidget, 'twosingletwidget')
+    def test_find_two_singlets_widget(self):
+        foundTwoSingletWidget = self.ui.findChild(QWidget, 'twosingletswidget')
         print(type(foundTwoSingletWidget))
         print('Found twosingletwidget with parent',
               foundTwoSingletWidget.parent(),
               foundTwoSingletWidget.parent().objectName())
 
-    def test_find_two_singlet_layout(self):
+    def test_find_two_singlets_layout(self):
 
-        foundLayout = self.ui.findChild(QGridLayout, 'twosingletlayout')
+        foundLayout = self.ui.findChild(QGridLayout, 'twosingletslayout')
         if foundLayout:
             print('Found layout named', foundLayout.objectName())
             print('Found layout has parent:', foundLayout.parent(),
@@ -159,7 +159,7 @@ class TestDefaultGUi:
                   foundLayout.parent().objectName())
 
     def test_find_AB_widget(self):
-        foundABWidget = self.ui.findChild(QWidget, 'ABwidget')
+        foundABWidget = self.ui.findChild(QWidget, 'abwidget')
         print(type(foundABWidget))
         print('Found ABwidget with parent',
               foundABWidget.parent(),
@@ -240,7 +240,7 @@ class TestViewSwitch:
         abButton.click()
         finalView = self.ui.stackedWidget.currentWidget()
         assert initialView is not finalView
-        assert finalView.objectName() == 'ABwidget'
+        assert finalView.objectName() == 'abwidget'
 
     # function below was used for debugging, and retained because it may detect
     # a drastic change in GUI structure
@@ -284,14 +284,14 @@ class TestABGUi:
         print('widget dict:', self.widgetdict)
 
     def test_starting_with_ab_view(self):
-        assert self.ui.stackedWidget.currentWidget().objectName() == 'ABwidget'
+        assert self.ui.stackedWidget.currentWidget().objectName() == 'abwidget'
 
     def test_ab_all_widgets_exist(self):
         """The user sees 5 labels and 5 'double spin box' numerical entries 
         corresponding to the 5 inputs needed for the AB simulation.
         """
 
-        for widget in main.twospin_vars:
+        for widget in main.twosinglets_vars:
             found_box = self.ui.findChild(QDoubleSpinBox, widget.key)
             assert found_box.value() == widget.value
             found_label = self.ui.findChild(QLabel, widget.key + '_label')
@@ -303,7 +303,7 @@ class TestABGUi:
         The labels have the correct text, and the numerical entries are 
         correct for the default system.
         """
-        layout = self.ui.findChild(QGridLayout, 'ABlayout')
+        layout = self.ui.findChild(QGridLayout, 'ablayout')
         widgetlist = main.ab_vars
         for i, widget in enumerate(widgetlist):
             widgetLabel = layout.itemAtPosition(0, i).widget()
@@ -318,7 +318,7 @@ class TestABGUi:
         # TODO: learn how to assert a widget is a certain class
         # Test doesnt' test for correct graph widget, just contents
 
-        layout = self.ui.findChild(QGridLayout, 'ABlayout')
+        layout = self.ui.findChild(QGridLayout, 'ablayout')
         widget_2_0 = layout.itemAtPosition(2, 0).widget()
         data = widget_2_0.listDataItems()
 
