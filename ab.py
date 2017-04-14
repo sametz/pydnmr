@@ -42,7 +42,6 @@ wb = var(key='wb', string='W<sub>B</sub>', value=0.50,
 percent_a = var(key='percent_a', string='% A', value=50.00,
                 range=(0.00, 100.00))
 
-
 twosinglets_vars = (va, vb, k, wa, wb, percent_a)
 
 # Widgets for the two coupled spins (AB system) view:
@@ -53,6 +52,10 @@ k_ab = var(key='k_ab', string='k<sub>AB</sub>', value=12.00,
 ab_vars = (va, vb, j_ab, k_ab, wa)
 
 mainviews = (('twosinglets', twosinglets_vars), ('ab', ab_vars))
+
+# plots was moved here from DnmrGui so that MainView class can find it.
+# Probably would be better design if DnmrGui.plots could be used (as in
+# earlier versions of the program), but couldn't get MainView to find it.
 plots = []
 
 
@@ -72,8 +75,6 @@ class DnmrGui(QMainWindow):
 
         super(DnmrGui, self).__init__(parent)
 
-        #self.simulation_vars = {}  # stores kwargs that model is called with
-        #self.plots = []
         print('creating views list')
         self.views = []
         self.models = [dnmrplot_2spin, dnmrplot_AB]
@@ -123,9 +124,14 @@ class DnmrGui(QMainWindow):
                 self.simulation_vars[widget.key] = widget.value
 
                 # update the view if this widget's value is changed
-                wbox.valueChanged.connect(
-                    lambda val, key=widget.key: self.parent().parent()
-                        .updateView(key, val))
+                # Using the lambda expression below allows extra information to
+                # be passed to the self.update slot, allowing the delegator to
+                # see who sent the signal, update the dictionary of model
+                # inputs, call the model for a simulation result, and plot
+                # it. See:
+                # https://mfitzp.io/article/transmit-extra-data-with-signals-in-pyqt/
+                wbox.valueChanged.connect(lambda val, key=widget.key:
+                                          self.parent().parent().updateView(key, val))
 
             # Add pyqtgraph widget
             setConfigOption('background', (43, 43, 43))
@@ -137,12 +143,7 @@ class DnmrGui(QMainWindow):
             # lets the graph span the entire width of the window, no matter how
             # many input widgets appear above
 
-            # TODO: This looks to be wrong! second line smells off
             self.setLayout(layout)
-            #self.layout().setObjectName('twosingletlayout')
-            #print('twosinglet layout name is:', twoSingletLayout.objectName())
-            #print('about to return twosingletwidget; name is: ',
-                  #twoSingletWidget.objectName())
 
     def setupUi(self):
         """
@@ -154,6 +155,17 @@ class DnmrGui(QMainWindow):
         self.setupModelBar()
         self.initializeGui()
 
+    def setupCentral(self):
+
+        self.stackedWidget = QStackedWidget()
+        self.stackedWidget.setObjectName('stackedwidget')
+        self.stackedWidget.setStyleSheet("background-color: rgb(60, 63, 65);")
+
+        for view in mainviews:
+            widget = self.MainView(view[0], *view[1])
+            self.stackedWidget.addWidget(widget)
+        self.setCentralWidget(self.stackedWidget)
+
     def setupModelBar(self):
         """
         Add a tool bar to the GUI for selecting which model to display 
@@ -162,7 +174,7 @@ class DnmrGui(QMainWindow):
         leftToolBar = QToolBar()
         leftToolBar.setStyleSheet("background-color: rgb(60, 63, 65);")
         leftToolBar.setObjectName('lefttoolbar')
-        #leftToolBar.addWidget(QLabel('Models!'))
+
         leftToolBar.addWidget(self.modelButtonGroup())
         self.addToolBar(Qt.LeftToolBarArea, leftToolBar)
 
@@ -210,158 +222,12 @@ class DnmrGui(QMainWindow):
         return modelsWidget
 
     def switchView(self, id):
-        print('button %d has been pressed' % id)
         self.stackedWidget.setCurrentIndex(id)
         self.call_model()
 
-    def setupCentral(self):
-
-        self.stackedWidget = QStackedWidget()
-        self.stackedWidget.setObjectName('stackedwidget')
-        # self.createViews()
-        # for view in views:
-        #     self.stackedWidget.addWidget(view)
-        # self.setCentralWidget(self.stackedWidget)
-        for view in mainviews:
-            widget = self.MainView(view[0], *view[1])
-            self.stackedWidget.addWidget(widget)
-        self.setCentralWidget(self.stackedWidget)
-
-    def createViews(self):
-        self.views.append(self.twoSingletView())
-        self.views.append(self.ABView())
-
-    def twoSingletView(self):
-
-        twoSingletWidget = QWidget()
-        twoSingletWidget.setObjectName('twosingletwidget')
-        twoSingletWidget.setAutoFillBackground(True)
-        twoSingletWidget.setStyleSheet("background-color: rgb(60, 63, 65);")
-
-        twoSingletWidget.simulation_vars = {}
-
-        twoSingletLayout = QGridLayout()
-        twoSingletLayout.setObjectName('twosingletlayout')
-        # More complex layouts can be considered in future, e.g. a horizontal
-        #  layout containing a serious of vertical layouts containing labels
-        # and spinboxes.
-
-        for i, widget in enumerate(twosinglets_vars):
-            # The namedtuple construct facilitates widget generation:
-            wlabel = QLabel(widget.string)
-            wlabel.setObjectName(widget.key + '_label')
-            wlabel.setStyleSheet('color: white')
-            wlabel.setAlignment(Qt.AlignCenter)
-
-            wbox = QDoubleSpinBox()
-            wbox.setObjectName(widget.key)
-            wbox.setStyleSheet('color: white')
-            wbox.setRange(*widget.range)  # SET RANGE BEFORE VALUE
-            wbox.setValue(widget.value)
-            wbox.setAlignment(Qt.AlignCenter)
-            wbox.setAccelerated(True)
-
-            # populate the dictionary with initial simulation variables
-            #self.simulation_vars[widget.key] = widget.value
-            twoSingletWidget.simulation_vars[widget.key] = widget.value
-            #print(widget.string, ' added to dict')
-
-            twoSingletLayout.addWidget(wlabel, 0, i)
-            twoSingletLayout.addWidget(wbox, 1, i)
-
-            # Using the lambda expression below allows extra information to
-            # be passed to the self.update slot, allowing the delegator to
-            # see who sent the signal, update the dictionary of model inputs,
-            # call the model for a simulation result, and plot it. See:
-            # https://mfitzp.io/article/transmit-extra-data-with-signals-in-pyqt/
-
-            # noinspection PyUnresolvedReferences
-            wbox.valueChanged.connect(
-                lambda val, key=widget.key: self.updateView(key, val))
-
-        #print('dict is now:', twoSingletWidget.simulation_vars)
-
-        setConfigOption('background', (43, 43, 43))
-        setConfigOption('foreground', (187, 187, 187))
-        graphicsView = PlotWidget()
-        self.plots.append(graphicsView.plot())
-        twoSingletLayout.addWidget(graphicsView, 2, 0, 1, len(twosinglets_vars))
-        # lets the graph span the entire width of the window, no matter how
-        # many input widgets appear above
-
-        # TODO: This looks to be wrong! second line smells off
-        twoSingletWidget.setLayout(twoSingletLayout)
-        twoSingletWidget.layout().setObjectName('twosingletlayout')
-        print('twosinglet layout name is:', twoSingletLayout.objectName())
-        print('about to return twosingletwidget; name is: ',
-              twoSingletWidget.objectName())
-        return twoSingletWidget
-
-    def ABView(self):
-
-        AB_Widget = QWidget()
-        AB_Widget.setAutoFillBackground(True)
-        AB_Widget.setStyleSheet("background-color: rgb(60, 63, 65);")
-        AB_Widget.setObjectName('ABwidget')
-
-        AB_Widget.simulation_vars = {}
-
-        AB_Layout = QGridLayout()
-        AB_Layout.setObjectName('ABlayout')
-        # More complex layouts can be considered in future, e.g. a horizontal
-        #  layout containing a serious of vertical layouts containing labels
-        # and spinboxes.
-
-        for i, widget in enumerate(ab_vars):
-            # The namedtuple construct facilitates widget generation:
-            wlabel = QLabel(widget.string)
-            wlabel.setObjectName(widget.key + '_label')
-            wlabel.setStyleSheet('color: white')
-            wlabel.setAlignment(Qt.AlignCenter)
-
-            wbox = QDoubleSpinBox()
-            wbox.setObjectName(widget.key)
-            wbox.setStyleSheet('color: white')
-            wbox.setRange(*widget.range)  # SET RANGE BEFORE VALUE
-            wbox.setValue(widget.value)
-            wbox.setAlignment(Qt.AlignCenter)
-            wbox.setAccelerated(True)
-
-            # populate the dictionary with initial simulation variables
-            AB_Widget.simulation_vars[widget.key] = widget.value
-            print(widget.string, ' added to dict')
-            AB_Layout.addWidget(wlabel, 0, i)
-            AB_Layout.addWidget(wbox, 1, i)
-
-            # Using the lambda expression below allows extra information to
-            # be passed to the self.update slot, allowing the delegator to
-            # see who sent the signal, update the dictionary of model inputs,
-            # call the model for a simulation result, and plot it. See:
-            # https://mfitzp.io/article/transmit-extra-data-with-signals-in-pyqt/
-
-            # noinspection PyUnresolvedReferences
-            wbox.valueChanged.connect(
-                lambda val, key=widget.key: self.updateView(key, val))
-
-        print('dict is now:', AB_Widget.simulation_vars)
-
-        setConfigOption('background', (43, 43, 43))
-        setConfigOption('foreground', (187, 187, 187))
-        graphicsView = PlotWidget()
-        self.plots.append(graphicsView.plot())
-        AB_Layout.addWidget(graphicsView, 2, 0, 1, len(twosinglets_vars))
-        # lets the graph span the entire width of the window, no matter how
-        # many input widgets appear above
-
-        # TODO: as with twosinglet, check second line and how names are done
-        AB_Widget.setLayout(AB_Layout)
-        AB_Widget.layout().setObjectName('ABlayout')
-
-        return AB_Widget
-
     def initializeGui(self):
 
-        # Initial view and plot determined by index in next 2 lines
+        # Note order of models in stackedWidget and plots must be same
         for i in range(len(plots)):
             self.stackedWidget.setCurrentIndex(i)
             plot = plots[i]
@@ -378,16 +244,11 @@ class DnmrGui(QMainWindow):
         Send the dictionary as **kwargs to the model
         :return: a spectrum, consisting of a tuple of x and y coordinate arrays
         """
-        #x, y = dnmrplot_2spin(**self.simulation_vars)
-        # x, y = dnmrplot_2spin(
-        #     **self.stackedWidget.currentWidget().simulation_vars)
         model = self.models[self.stackedWidget.currentIndex()]
         x, y = model(
             **self.stackedWidget.currentWidget().simulation_vars)
         return x, y
 
-    # TODO: this would override the builtin class function 'update'!
-    # You probably want to rename this!
     def updateView(self, key, val):
         """
         Detect a change in numerical input; record the change in
@@ -397,17 +258,8 @@ class DnmrGui(QMainWindow):
         signalling widget
         :param val: the current value of the signalling widget
         """
-        #self.simulation_vars[key] = val
         self.stackedWidget.currentWidget().simulation_vars[key] = val
         self.plot_graph()
-
-        # plot = self.plots[self.stackedWidget.currentIndex()]
-        # plot.setData(*self.call_model())  # original routine
-
-        # OR:
-
-        # spectrum = TwoSinglets(**self.simulation_vars).spectrum()
-        # self.plotdata.setData(*spectrum)  # using new TwoSinglets class
 
     def plot_graph(self):
         activePlot = plots[self.stackedWidget.currentIndex()]
