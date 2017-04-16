@@ -18,17 +18,17 @@ from pydnmr.dnmrplot import dnmrplot_2spin, dnmrplot_AB
 # Models that correspond to an equivalent in Reich's WINDNMR program use
 # the same preset values as WINDNMR.
 
-# Define the different types of input widgets that may be required.
-# Currently all inputs are QDoubleSpinBox.
+# a namedtuple 'var' describes each input widget.
+# Currently all data entry widgets useQDoubleSpinBox
 # Keys are for use with a dict that is sent to model as **kwargs.
 # Keys are also used to setObjectName for widgets.
 # Strings are for labels.
-# Value is for the inital QDoubleSpinBox default.
-# Range is the range of values for the QDoubleSpinBox.
+# Value is the inital QDoubleSpinBox default.
+# Range is the range of values allowed for the QDoubleSpinBox.
 # RANGE MUST BE SET BEFORE VALUE
+var = namedtuple('var', ['key', 'string', 'value', 'range'])
 
 # Widgets needed for two uncoupled spins view:
-var = namedtuple('var', ['key', 'string', 'value', 'range'])
 va = var(key='va', string=str('ν')+'<sub>A</sub>', value=165.00,
          range=(0.00, 10000.00))
 vb = var(key='vb', string=str('ν')+'<sub>B</sub>', value=135.00,

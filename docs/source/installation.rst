@@ -1,5 +1,5 @@
-Installation and Use
-====================
+Installation and Execution
+==========================
 
 For Windows and Mac OS X, the application is frozen as a single-file,
 double-click-to-run application (see link above). Nothing besides the executable file needs to be installed. The description below is only for users that
