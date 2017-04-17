@@ -1,4 +1,4 @@
-pyDNMR v0.4.0 (alpha)
+pyDNMR v0.5.0 (beta)
 *********************
 
 .. image:: docs/source/pydnmrimg.png
