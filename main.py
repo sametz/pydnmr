@@ -38,7 +38,7 @@ percent_a = var(key='percent_a', string='% A', value=50.00,
 # Each type of calculation will have its own ordering of input widgets:
 twospin_vars = (va, vb, k, wa, wb, percent_a)
 
-# further widget collections woudl appear hear for future calculation models
+# further widget collections woudl appear hear for future calculation views
 
 
 class dnmrGui(QMainWindow):
@@ -46,7 +46,7 @@ class dnmrGui(QMainWindow):
     Create the GUI for the application.
 
     Currently the app features a single simulation model (two uncoupled
-    spins), and so a single main window. TODO: as models are added, create a
+    spins), and so a single main window. TODO: as views are added, create a
     toggle between GUI windows tailored to each simulation (e.g. appropriate
     widgets for data entry)
     """
