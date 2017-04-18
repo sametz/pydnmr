@@ -5,8 +5,8 @@ from PyQt5.QtWidgets import (QApplication, QDoubleSpinBox, QLabel, QGridLayout,
                              QRadioButton, QSpacerItem)
 from PyQt5.QtCore import Qt
 
-#import main
-import ab as main
+import main
+#import ab as main
 
 app = QApplication(sys.argv)
 
