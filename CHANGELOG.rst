@@ -4,8 +4,7 @@ Change Log
 
 All notable changes to this project will be documented in this file.
 
-The format is inspired by `Keep a Changelog <http://keepachangelog.com/en/0.3.0/>`_ and tries to adhere to `Semantic Versioning <http://semver.org>`_
-. The author interprets the terms below as follows:
+The format is inspired by `Keep a Changelog <http://keepachangelog.com/en/0.3.0/>`_ and tries to adhere to `Semantic Versioning <http://semver.org>`_. The author interprets the terms below as follows:
 
 * **pre-alpha status**: the app runs, but there is no formal unit or functional testing.
 
@@ -13,13 +12,34 @@ The format is inspired by `Keep a Changelog <http://keepachangelog.com/en/0.3.0/
 * **alpha status**: pre-alpha, plus implementation of unit and functional tests.
 
 
-* **beta status**: alpha, plus documentation, implementation of all anticipated Version 1.0.0 features, and setup routines.
+* **beta status**: alpha, plus documentation, implementation of all anticipated Version 1.0.0 features, and installation requirements.
 
 
-* **release candidate status**: beta, plus standalone executable(s).
+* **release candidate status**: beta, plus standalone executable(s) for Windows, Mac OS X, and Linux.
 
 
 * **Version 1.0.0 release**: a minimal app suitable for educational use and not requiring execution from the command line interface.
+
+0.5.0 - 2017-04-18 (beta)
+-------------------------
+
+Added
+^^^^^
+
+* Simulation for two coupled spin-1/2 nuclei undergoing two-site exchange (two doublets or AB quartet at the slow-exchange limit)
+
+* Theory section for new model in documentation
+
+* Button toolbar on GUI for selecting the model
+
+* Tests and necessary test data for the new simulation and GUI features
+
+
+Removed
+^^^^^^^
+
+* Unused file context.py in tests folder
+
 
 
 0.4.0 - 2017-04-04 (alpha)
