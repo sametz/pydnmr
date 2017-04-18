@@ -130,8 +130,9 @@ class DnmrGui(QMainWindow):
                 # inputs, call the model for a simulation result, and plot
                 # it. See:
                 # https://mfitzp.io/article/transmit-extra-data-with-signals-in-pyqt/
-                wbox.valueChanged.connect(lambda val, key=widget.key:
-                                          self.parent().parent().updateView(key, val))
+                wbox.valueChanged.connect(
+                    lambda val, key=widget.key:
+                    self.parent().parent().updateView(key, val))
 
             # Add pyqtgraph widget
             setConfigOption('background', (43, 43, 43))
@@ -221,8 +222,8 @@ class DnmrGui(QMainWindow):
 
         return modelsWidget
 
-    def switchView(self, id):
-        self.stackedWidget.setCurrentIndex(id)
+    def switchView(self, index):
+        self.stackedWidget.setCurrentIndex(index)
         self.call_model()
 
     def initializeGui(self):
