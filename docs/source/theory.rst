@@ -2,7 +2,11 @@ Theory
 ======
 
 The current version of pyDNMR simulates the case of two-site exchange for
-uncoupled spin-1/2 nuclei. Other simple systems that do not require a quantum-mechanical treatment will be introduced after a stable Version 1 distribution is finished.
+uncoupled and coupled spin-1/2 nuclei. Other simple systems that do not
+require a quantum-mechanical treatment will be introduced after a stable Version 1 distribution is finished.
+
+Two-Site Exchange of Two Uncoupled Nuclei
+-----------------------------------------
 
 Sandström [#f1]_ shows how a formula for calculating the intensity
 (:math:`\textrm{v}`) at frequency :math:`\nu` can be derived from the Bloch
@@ -52,7 +56,7 @@ Although the :math:`T_2` s for the nuclei at sites A and B could be determined e
     T_{2A}=\dfrac{1}{\pi W_{0A}}\mbox{; } T_{2B}=\dfrac{1}{\pi W_{0B}}
 
 
-So, the experimental parameters required to simulate a lineshape are:
+The experimental parameters required to simulate a lineshape are therefore:
 
 * :math:`\nu_A` and :math:`\nu_B` at the slow-exchange limit
 * linewidths :math:`W_{0A}` and :math:`W_{0B}` at the slow-exchange limit
@@ -63,3 +67,42 @@ So, the experimental parameters required to simulate a lineshape are:
 .. [#f1] Sandström, J. *Dynamic NMR Spectroscopy;* Academic Press: New York, 1982.
 
 .. [#f2] The use of :math:`\textrm{v}` for intensity is retained from Sandström, despite its resemblance to :math:`\nu` . The simulated lineshape will be a plot of :math:`\textrm{v}` vs. :math:`\nu` !
+
+Two-Site Exchange of Two Coupled Nuclei
+---------------------------------------
+
+The simulation uses the formulas from Weil et al. [#f3]_ This simulation
+assumes that the population of the two states is equal :math:`(p_A=p_B=0.5)`. The function :math:`F(\nu)` for intensity at frequency :math:`\nu` is given as:
+
+.. math::
+    F = C\bigg(\frac{r_+b_+-sa_+}{a_+^2+b_+^2}+\frac{r_-b_--sa_-}{a_-^2+b_-^2}\bigg)
+
+where:
+
+.. math::
+    a_\pm &= 4\pi^2(\nu_o-\nu\pm J/2)^2-(\tau^{-1}+\tau_2^{-1})^2-\pi^2(\nu_1-\nu_2)^2-\pi^2 J^2 + \tau^{-2}\\
+    b_\pm &= 4\pi(\nu_o-\nu\pm J/2)(\tau^{-1}+\tau_2^{-1})\mp 2\pi J\tau^{-1}\\
+    r_\pm &= 2\pi(\nu_o-\nu\pm J)\\
+    s &= 2\tau^{-1}+\tau_2^{-1}
+
+Note that in the original publication, there was an error in the formula for
+:math:`r_\pm` -- the final term erroneously used :math:`"\pm"` instead of the correct :math:`"\mp"` shown here.
+
+These functions in turn require the following definitions:
+
+.. math::
+    \nu_o &= \frac{\nu_1 + \nu_2}{2}\\
+    \tau &= k^{-1}\\
+    \tau_2 &= \frac{1}{\pi W_{½}}
+
+The experimental parameters required to simulate a lineshape are therefore:
+
+* :math:`\nu_A` and :math:`\nu_B` at the slow-exchange limit
+* The coupling constant :math:`J`
+* a single linewidth :math:`W_{0A}` and :math:`W_{0B}` at the slow-exchange limit, and
+* the rate constant :math:`k` for the rate of exchange
+
+
+.. rubric:: Footnotes
+.. [#f3] Brown, K.C.; Tyson, R.L.; Weil, J.A. *J. Chem. Educ.* **1998**, *75*, 1632.
+

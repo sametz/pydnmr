@@ -3,7 +3,7 @@
 
 from tests.plottools import popplot
 # from .dnmrplot import dnmrplot_2spin
-from tests.testdata import TWOSPIN_SLOW  # , TWOSPIN_COALESCE, TWOSPIN_FAST
+from tests.testdata import TWOSPIN_SLOW, AB_WINDNMR  # , TWOSPIN_COALESCE, TWOSPIN_FAST
 from pydnmr.dnmrmath import *
 
 
@@ -104,6 +104,25 @@ def test_TwoSinglets_slow_exchange():
 
         print('i.e. input of frequency ', peak[0], ' should give output of '
               'intensity ', peak[1])
+        print('Calculated intensity is actually: ', calculated_intensity)
+
+        np.testing.assert_almost_equal(calculated_intensity,
+                                       peak[1])
+
+
+def test_ab_WINDNMR_defaults():
+    spectrum = AB_WINDNMR
+    peaks = get_maxima(spectrum)
+    print("Maxima: ", peaks)
+
+    ab_args = (165, 135, 12, 12, 0.5)
+
+    for peak in peaks:
+        print('Testing vs. accepted peak at: ', peak)
+        calculated_intensity = dnmr_AB(peak[0], *ab_args)
+
+        print('i.e. input of frequency ', peak[0], ' should give output of '
+                                                   'intensity ', peak[1])
         print('Calculated intensity is actually: ', calculated_intensity)
 
         np.testing.assert_almost_equal(calculated_intensity,

@@ -16,11 +16,3 @@ def popplot(x, y, invertx=True):
     popup.plot(x, y)
     # noinspection PyUnresolvedReferences
     pg.QtGui.QApplication.exec_()
-
-
-if __name__ == '__main__':
-    import numpy as np
-
-    _x = np.linspace(0, 10, 800)
-    _y = _x ** 2
-    popplot(_x, _y)

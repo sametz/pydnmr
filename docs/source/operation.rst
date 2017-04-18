@@ -7,12 +7,10 @@ Using pyDNMR
 Entering Parameters
 -------------------
 
-Numerical values for :math:`\nu_A , \nu_B, k_A, W_A,
-W_B`, and % A can be entered into the fields at the top of the application
-window. The calculations assume units of Hz or s\ :superscript:`-1` for the
-first five. The final entry is the population of site A expressed as a
-percentage (rather than as the fraction (:math:`p_A`) used in the previous
-section's formulas).
+Numerical values can be entered into the fields at the top of the application
+window. The calculations assume units of Hz for chemical shifts, or s\
+:superscript:`-1` for rate constants. Relative populations of sites are
+entered as percentages.
 
 Mouse Controls
 --------------
