@@ -4,8 +4,7 @@ Change Log
 
 All notable changes to this project will be documented in this file.
 
-The format is inspired by `Keep a Changelog <http://keepachangelog.com/en/0.3.0/>`_ and tries to adhere to `Semantic Versioning <http://semver.org>`_
-. The author interprets the terms below as follows:
+The format is inspired by `Keep a Changelog <http://keepachangelog.com/en/0.3.0/>`_ and tries to adhere to `Semantic Versioning <http://semver.org>`_. The author interprets the terms below as follows:
 
 * **pre-alpha status**: the app runs, but there is no formal unit or functional testing.
 
@@ -13,12 +12,10 @@ The format is inspired by `Keep a Changelog <http://keepachangelog.com/en/0.3.0/
 * **alpha status**: pre-alpha, plus implementation of unit and functional tests.
 
 
-* **beta status**: alpha, plus documentation, implementation of all
-anticipated Version 1.0.0 features, and installation requirements.
+* **beta status**: alpha, plus documentation, implementation of all anticipated Version 1.0.0 features, and installation requirements.
 
 
-* **release candidate status**: beta, plus standalone executable(s) for
-Windows, Mac OS X, and Linux.
+* **release candidate status**: beta, plus standalone executable(s) for Windows, Mac OS X, and Linux.
 
 
 * **Version 1.0.0 release**: a minimal app suitable for educational use and not requiring execution from the command line interface.
@@ -29,8 +26,7 @@ Windows, Mac OS X, and Linux.
 Added
 ^^^^^
 
-* Simulation for two coupled spin-1/2 nuclei undergoing two-site exchange
-(two doublets or AB quartet at the slow-exchange limit)
+* Simulation for two coupled spin-1/2 nuclei undergoing two-site exchange (two doublets or AB quartet at the slow-exchange limit)
 
 * Theory section for new model in documentation
 
